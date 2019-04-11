@@ -1,0 +1,24 @@
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var bcrypt = require('bcrypt-nodejs');
+var adminSchema = new Schema({
+    email: { type: String, required: true },
+    password: { type: String },
+    name: { type: String, required: true },
+    image: { type: String },
+    birthday: { type: Date },
+    phone: { type: String },
+    zalo: { type: String },
+    facebook: { type: String },
+    gplus: { type: String },
+    website: { type: String },
+    address: { type: String },
+    active: { type: Number, default: 0 },
+});
+adminSchema.methods.encryptPassword = function(password){
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);
+};
+adminSchema.methods.validPassword = function(password){
+    return bcrypt.compareSync(password, this.password)
+};
+module.exports = mongoose.model('Admin', adminSchema);

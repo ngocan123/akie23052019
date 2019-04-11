@@ -1,0 +1,10 @@
+var express = require('express');
+var router = express.Router();
+const productController = require('../../controllers/backend/ProductController');
+router.get('/list/', productController.list);
+router.get('/getAll/', productController.getAll);
+router.get('/show/:id', productController.show);
+router.post('/store', productController.store);
+router.post('/update', productController.update);
+router.post('/saveProductAndTag', productController.saveProductAndTag);
+module.exports = router;
