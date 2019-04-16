@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 var adminSchema = new Schema({
     email: { type: String, required: true },
-    password: { type: String },
-    name: { type: String, required: true },
+    password: { type: String, required: true },
+    name: { type: String },
     image: { type: String },
     birthday: { type: Date },
     phone: { type: String },
@@ -13,7 +13,7 @@ var adminSchema = new Schema({
     gplus: { type: String },
     website: { type: String },
     address: { type: String },
-    active: { type: Number, default: 0 },
+    active: { type: Number },
 });
 adminSchema.methods.encryptPassword = function(password){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);

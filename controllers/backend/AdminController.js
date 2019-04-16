@@ -1,99 +1,101 @@
 var express = require('express');
+var bcrypt = require('bcryptjs');
 var Admin = require("../../models/admin");
 var adminController = {};
 var router = express.Router();
-//router.use(csrfProtection);
 adminController.list = function(req, res, next) {
-    //res.json({});
-    Admin.find(function(err, docs){
-      res.json(docs);
-      //console.log(docs);
-        //res.render('backend/admin/list', { title:"Danh sách sản phẩm", layout: 'layouts/backend/home', result: docs });
-    });
+  Admin.find(function(err, docs){
+    res.json(docs);
+  });
+};
+adminController.getAll = function(req, res, next) {
+  Admin.find({}, { password: 0 }).then((err, users) => {
+      if(err)
+          res.send(err)
+      else if(!users)
+          res.send(404)
+      else
+          res.send(users)
+      next()
+  });
 };
 adminController.show = function(req, res) {
-    Admin.findOne({_id: req.params.id}).exec(function (err, admins) {
-      if (err) {
-        console.log("Error:", err);
-      }
-      else {
-        res.render("backend/admin/show", {admins: admins, csrfToken: req.csrfToken(), layout: 'layouts/backend/home'});
-      }
-    });
+  var useId = req.params.id;
+  Admin.find(useId, { password: 0 }).then((err, users) => {
+      if(err)
+          res.send(err)
+      else if(!users)
+          res.send(404)
+      else
+          res.send(users)
+      next()
+  });
 };
 adminController.create = function(req, res) {
-    res.render("backend/admin/create", {title: 'Thêm tài khoản', csrfToken: req.csrfToken(), layout: 'layouts/backend/home'});
+  res.send('View tạo tài khoản');
 };
 //Add record
-adminController.save = function(req, res) {
-    Admin.findOne({'email': req.body.email}, function(err, admin){
+adminController.store = function(req, res) {
+  Admin.findOne({'email': req.body.email}, function(err, user){
+      var newPost = new Admin();
+      if(req.body.password){
+          var hashedPassword = bcrypt.hashSync(req.body.password, 8);	
+          newPost.password = hashedPassword;				
+      }
+      newPost.name = req.body.name;
+      newPost.email = req.body.email;
+      newPost.save(function(err, newPost){
         if(err){
-            return done(err);
+          res.send(err)
+        }else{
+          res.send(newPost)
         }
-        if(admin){
-            return done(null, false, {message: 'Email đã được sử dụng!'});
-        }
-        var newPost = new Admin();
-        newPost.name = req.body.name;
-        newPost.address = req.body.address;
-        newPost.email = req.body.email;
-        newPost.phone = req.body.phone;
-        newPost.zalo = req.body.zalo;
-        newPost.facebook = req.body.facebook;
-        newPost.gplus = req.body.plus;
-        newPost.website = req.body.website;
-        newPost.password = newPost.encryptPassword(req.body.password);
-        newPost.save(function(err, newPost){
-            if(err){
-                return done(null, newPost);
-            }
-        res.redirect('/admin/list');
-        });
-    });
+      });
+  });
 };
 adminController.edit = function(req, res) {
-    Admin.findOne({_id: req.params.id}).exec(function (err, results) {
-      if (err) {
-        res.redirect("/admin/show/"+res._id);
-      }
-      else {
-        res.render("backend/admin/edit", {results: results, csrfToken: req.csrfToken(), layout: 'layouts/backend/home'});
-      }
-    });
+  Admin.findOne({_id: req.params.id}).exec(function (err, results) {
+    if (err) {
+      res.send(err);
+    }
+    else {
+      res.send(results);
+    }
+  });
 };
 
 adminController.update = function(req, res) {
-    
-    var messenger = {};
-    var data = {
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone,
-        zalo: req.body.zalo,
-        website: req.body.website,
-        facebook: req.body.facebook,
-        gplus: req.body.gplus,
-        address: req.body.address,
-    }
-    Admin.findOne({'email': req.body.email}, function(err, result){
-        if(result && result._id!=req.params.id){
-            res.redirect("/admin/edit/"+req.params.id);
-        }else{
-            Admin.findByIdAndUpdate(req.params.id, { $set: data}, { new: true }, function (err, results) {
-                res.render("backend/admin/edit", {results: req.body, csrfToken: req.csrfToken(), layout: 'layouts/backend/home' });
-            });
-        }
-    });
+  
+  var messenger = {};
+  var data = {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      zalo: req.body.zalo,
+      website: req.body.website,
+      facebook: req.body.facebook,
+      gplus: req.body.gplus,
+      address: req.body.address,
+  }
+  Admin.findOne({'email': req.body.email}, function(err, result){
+      if(result && result._id!=req.params.id){
+          res.send({"error":0});
+      }else{
+          Admin.findByIdAndUpdate(req.params.id, { $set: data}, { new: true }, function (err, results) {
+              res.send(results);
+          });
+      }
+  });
 };
 
 adminController.delete = function(req, res) {
-    Admin.remove({_id: req.params.id}, function(err) {
-      if(err) {
-        res.redirect("/admin/list");
-      }
-      else {
-        res.redirect("/admin/list");
-      }
-    });
-  };
+  Admin.remove({_id: req.params.id}, function(err) {
+    if(err) {
+      res.send(err);
+    }
+    else {
+      res.send({"status":1});
+    }
+  });
+};
 module.exports = adminController;

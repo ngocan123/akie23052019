@@ -1,3 +1,3 @@
 module.exports = {
-    'secret': 'supersecret' // anything you like
+    'secret': 'supersecret'
 };
