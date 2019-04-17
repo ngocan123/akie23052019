@@ -7,18 +7,25 @@ var mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 // these are require packages that we need
-
 var hbs = require('express-hbs');
 var passport = require('passport');
 var session = require('express-session');
 var flash = require('connect-flash');
 var validator = require('express-validator');
 
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
-var adminsRouter = require('./routes/admin/admin');
+// Admin
+var backendDashboardRouter = require('./routes/admin/dashboard');
+var backendAdminRouter = require('./routes/admin/admin');
+var backendUserRouter = require('./routes/admin/users');
+var backendProductRouter = require('./routes/admin/product');
+var backendCatProductRouter = require('./routes/admin/catproduct');
+var backendTagRouter = require('./routes/admin/tag');
+var backendGalleryRouter = require('./routes/admin/gallery');
+//var backendAuthRouter = require('./routes/auth');
+// Api
+var adminsRouter = require('./routes/api/admin');
 var apiUserRouter = require('./routes/api/users');
 var apiProductRouter = require('./routes/api/product');
 var apiCatProductRouter = require('./routes/api/catproduct');
@@ -42,14 +49,12 @@ app.engine('hbs', hbs.express4({
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
-
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // right here we need to allow domain
 const corsOptions = {
-	origin: ['http://localhost:3000','https://ai-shop2.herokuapp.com/'],
+	origin: ['http://localhost:3000','https://reactbackend2.herokuapp.com/'],
 	credentials:true,
 }
 app.use(cors(corsOptions));
@@ -67,6 +72,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   next();
 // });
 app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/backend', backendDashboardRouter);
+app.use('/backend/admin/', backendAdminRouter);
+app.use('/backend/user', backendUserRouter);
+app.use('/backend/product', backendProductRouter);
+app.use('/backend/catproduct', backendCatProductRouter);
+app.use('/backend/tag', backendTagRouter);
+app.use('/backend/gallery', backendGalleryRouter);
+//app.use('/api/auth', apiAuthRouter);
+
+
 app.use('/users', usersRouter);
 app.use('/api/admin/', adminsRouter);
 app.use('/api/user', apiUserRouter);

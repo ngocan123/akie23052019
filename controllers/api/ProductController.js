@@ -6,10 +6,50 @@ const Tag = require("../../models/tag");
 const url = require('url');
 const productController = {};
 productController.list = function(req, res, next) {
-    Product.find()
-    .populate('author').populate('tags').populate('imageNumber').exec((err, posts) => {
-        res.render('backend/product/index', { results: posts, layout: 'layouts/backend/home' });
-    });
+    //res.send(req);
+    const filter = {};
+    const query = url.parse(req.url,true).query;
+
+    //===================paginattion
+    var perPage = query.perPage || 10
+    var page = query.page || 1
+    //===================end pagination
+    //res.send(query);
+    if(query){
+        // NodeJs Mongoose find like Reference from
+        // https://stackoverflow.com/questions/9824010/mongoose-js-find-user-by-username-like-value
+        const keyword = new RegExp(query.keyword, 'i'); // it return /keyword/i            
+
+        // NodeJs Mongoose query find OR Reference From
+        // https://stackoverflow.com/questions/33898159/mongoose-where-query-with-or
+        filter.$or = [{name: keyword}, {description:keyword}]
+        //filter.page = page;
+        Product.find(filter)
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .populate('author').populate('tags').populate('imageNumber').exec((err, posts) => {
+            // Product.find(filter).count().exec((err, posts) => {
+            //     res.send({
+            //         post:post,
+            //         current: page,
+            //         pages: Math.ceil(count / perPage)
+            //     })
+            // });
+            Product.find(filter).count().exec(function(err, count) {
+                res.send({
+                    posts: posts,
+                    current: page,
+                    pages: Math.ceil(count / perPage),
+                    count:count,
+                })
+            })
+            //res.send(post)
+        });
+    }else{
+        Product.populate('author').populate('tags').exec((err, post) => {
+            res.send(post)
+        });
+    }
 };
 productController.getAll = function(req, res, next) {
     const filter = {};

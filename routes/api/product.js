@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
-const productController = require('../../controllers/backend/ProductController');
+const productController = require('../../controllers/api/ProductController');
 const verifyToken = require('../../Middlewares/JwtAuthMiddleware');
 
 //========Fix upload image
