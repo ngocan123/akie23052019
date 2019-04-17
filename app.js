@@ -49,7 +49,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // right here we need to allow domain
 const corsOptions = {
-	origin: ['http://localhost:3000'],
+	origin: ['http://localhost:3000','https://ai-shop2.herokuapp.com/'],
 	credentials:true,
 }
 app.use(cors(corsOptions));
