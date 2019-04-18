@@ -9,7 +9,7 @@ passport.deserializeUser(function(id, done){
         done(err, user);
     })
 });
-passport.use('local.adminAdd', new LocalStrategy({
+passport.use('local.authRegister', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
@@ -43,7 +43,7 @@ passport.use('local.adminAdd', new LocalStrategy({
         });
     })
 }));
-passport.use('local.adminLogin', new LocalStrategy({
+passport.use('local.authLogin', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
@@ -68,6 +68,7 @@ passport.use('local.adminLogin', new LocalStrategy({
         if(!admin.validPassword(password)){
             return done(null, false, { message: 'Mật khẩu không đúng!' });
         }
+        console.log(admin);
         return done(null, admin);
     });
 }));

@@ -1,4 +1,24 @@
 
+{{#contentFor "pagesCss"}}
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/gallery/gallery.css">
+{{/contentFor}}
+
+{{#contentFor "pagesStyle"}}
+
+{{/contentFor}}
+
+{{#contentFor "pageScripts"}}
+<script src="/gallery/gallery.js"></script>
+{{/contentFor}}
+{{#contentFor "pageJs"}}
+  <!-- page script -->
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
+</script>
+{{/contentFor}}
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
@@ -15,10 +35,12 @@
     <!-- Info boxes -->
     <div class="">
         <div class="box">
-            <form action="/admin/save" method="post" enctype="application/x-www-form-urlencoded">
+            <form action="/admin/store" method="post" enctype="application/x-www-form-urlencoded">
                 <div class="box-header">
                     <h3 class="box-title">Thêm tài khoản</h3>
-                    <button type="submit" class="btn btn-sm btn-success" style="float:right"><i class="fa fa-plus"></i> Thêm</button>
+                    <button type="submit" class="btn btn-sm btn-success" style="float:right">
+                        <i class="fa fa-plus"></i> Thêm
+                    </button>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -64,8 +86,14 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="image">Ảnh đại diện</label>
-                            <input type="file" name="image" id="image" placeholder="Ảnh đại diện">
-                            <p class="help-block">Upload ảnh với tỷ lệ 1:1</p>
+                            <div class="clearfix"></div>
+                            <input type="text" id="imageNumber">
+                            <button type="button" class="showImageUpload imagePath clearfix" >
+                                <a class="btn btn-sm btn-primary select_image" data-name="imageNumber" limit="0">Chọn ảnh</a>
+                                <div class="divShowImageUpload imageNumber">
+                                    <img src="/adminator/images/user_default.jpg" alt="">
+                                </div>
+                            </button>
                             </div>
                             <div class="checkbox">
                             <label>

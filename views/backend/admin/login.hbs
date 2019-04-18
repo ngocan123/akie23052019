@@ -42,8 +42,8 @@
         </div>
     {{/if}}
     <p class="login-box-msg">Đăng nhập quản lý hệ thống</p>
-    <form action="/admin/login" method="post">
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <form action="/auth/login" method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       <div class="form-group has-feedback">
         <input type="email" name="email" class="form-control" placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>

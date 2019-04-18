@@ -7,6 +7,14 @@ var multer = require('multer');
 var cors = require('cors');
 app.use(cors());
 const galleryController = {};
+//Hiển thị modal Gallery
+galleryController.showModalGallery = function(req, res, next) {
+  //const query = url.parse(req.url,true).query;
+  // const result = {
+  //   title: 'hk'
+  // };
+  res.render('backend/managerGallery/modalGallery',{ result: 'ok'});
+};
 //Add record
 galleryController.getAll = function(req, res, next) {
   Gallery.find().exec((err, post) => {

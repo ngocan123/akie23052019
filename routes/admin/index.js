@@ -34,7 +34,7 @@ router.get('/add', function(req, res, next) {
     res.render('backend/admin/add', { title: 'Đăng ký', csrfToken: req.csrfToken(), layout: 'layouts/backend/home' });
 });
 router.post('/add', function(req, res, next){
-    console.log(req.files);
+    //console.log(req.files);
     Admin.findOne({'email': req.body.email}, function(err, admin){
         if(err){
             return done(err);

@@ -14,6 +14,10 @@ var adminSchema = new Schema({
     website: { type: String },
     address: { type: String },
     active: { type: Number },
+    imageNumber: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Gallery'
+     },
 });
 adminSchema.methods.encryptPassword = function(password){
     return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);

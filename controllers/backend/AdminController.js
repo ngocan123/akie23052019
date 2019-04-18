@@ -3,9 +3,10 @@ var bcrypt = require('bcryptjs');
 var Admin = require("../../models/admin");
 var adminController = {};
 var router = express.Router();
-adminController.list = function(req, res, next) {
-  Admin.find(function(err, docs){
-    res.json(docs);
+adminController.index = function(req, res, next) {
+  //console.log(req);
+  Admin.find(function(err, results){
+    res.render('backend/admin/index', { results: results, layout: 'layouts/backend/home', user: req.user});
   });
 };
 adminController.getAll = function(req, res, next) {
@@ -21,18 +22,13 @@ adminController.getAll = function(req, res, next) {
 };
 adminController.show = function(req, res) {
   var useId = req.params.id;
-  Admin.find(useId, { password: 0 }).then((err, users) => {
-      if(err)
-          res.send(err)
-      else if(!users)
-          res.send(404)
-      else
-          res.send(users)
-      next()
+  Admin.find(useId, { password: 0 }).then((err, results) => {
+    res.render('backend/admin/show', { results: results, layout: 'layouts/backend/home', user: req.user});
   });
 };
 adminController.create = function(req, res) {
-  res.send('View tạo tài khoản');
+  const results = {};
+  res.render('backend/admin/create', { results: results, layout: 'layouts/backend/home', user: req.user});
 };
 //Add record
 adminController.store = function(req, res) {
@@ -45,11 +41,7 @@ adminController.store = function(req, res) {
       newPost.name = req.body.name;
       newPost.email = req.body.email;
       newPost.save(function(err, newPost){
-        if(err){
-          res.send(err)
-        }else{
-          res.send(newPost)
-        }
+        res.router('admin/show/'+newPost._id);
       });
   });
 };

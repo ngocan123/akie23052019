@@ -23,7 +23,7 @@ var backendProductRouter = require('./routes/admin/product');
 var backendCatProductRouter = require('./routes/admin/catproduct');
 var backendTagRouter = require('./routes/admin/tag');
 var backendGalleryRouter = require('./routes/admin/gallery');
-//var backendAuthRouter = require('./routes/auth');
+var backendAuthRouter = require('./routes/admin/auth');
 // Api
 var adminsRouter = require('./routes/api/admin');
 var apiUserRouter = require('./routes/api/users');
@@ -40,7 +40,7 @@ router.use(bodyParser.urlencoded({ extended: false })); // for json return
 router.use(bodyParser.json());  // for json return 
 var uri = 'mongodb://shop2019:shop2019@cluster0-shard-00-00-uwpjt.mongodb.net:27017,cluster0-shard-00-01-uwpjt.mongodb.net:27017,cluster0-shard-00-02-uwpjt.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true';
 mongoose.connect(uri, { useNewUrlParser: true });
-require('./config/passport');
+require('./config/passports');
 app.engine('hbs', hbs.express4({
   defaultLayout: 'views/layouts/layout',
   layoutsDir: __dirname + '/views', 
@@ -62,15 +62,24 @@ app.use(bodyParser.json());
 
 app.use(validator());
 app.use(cookieParser());
-app.use(session({ secret: 'supersecret', resave: false, saveUninitialized: false }));
+app.use(session({ secret: 'supersecret', resave: true, saveUninitialized: false }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(function(req, res, next){
-//   res.locals.login = req.isAuthenticated('local.signin');
-//   next();
-// });
+app.use(function(req, res, next){
+  //console.log(req.isAuthenticated('local.authLogin'));
+  res.locals.test = 'test bien global'
+  res.locals.authLogin = req.isAuthenticated('local.authLogin');
+  if(req.isAuthenticated()){
+    console.log(req.user);
+    res.locals.user = req.user;
+  }
+  // if(!res.locals.authLogin){
+  //   res.redirect('/auth/login');
+  // }
+  next();
+});
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/backend', backendDashboardRouter);
@@ -80,10 +89,8 @@ app.use('/backend/product', backendProductRouter);
 app.use('/backend/catproduct', backendCatProductRouter);
 app.use('/backend/tag', backendTagRouter);
 app.use('/backend/gallery', backendGalleryRouter);
-//app.use('/api/auth', apiAuthRouter);
+app.use('/auth', backendAuthRouter);
 
-
-app.use('/users', usersRouter);
 app.use('/api/admin/', adminsRouter);
 app.use('/api/user', apiUserRouter);
 app.use('/api/product', apiProductRouter);

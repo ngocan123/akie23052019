@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
-const galleryController = require('../../controllers/api/GalleryController');
+const galleryController = require('../../controllers/backend/GalleryController');
 const verifyToken = require('../../Middlewares/JwtAuthMiddleware');
 
 //========Fix upload image
@@ -30,7 +30,7 @@ const verifyToken = require('../../Middlewares/JwtAuthMiddleware');
 //  })
 // })
 //========End fix upload image
-router.get('/getAll', galleryController.getAll);
+router.get('/showModalGallery', galleryController.showModalGallery);
 router.get('/show/:id', galleryController.show);
 router.post('/store', galleryController.store);
 module.exports = router;
