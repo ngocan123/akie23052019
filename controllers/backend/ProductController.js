@@ -21,53 +21,70 @@ productController.getAll = function(req, res, next) {
         res.send(post)
     });
 };
+productController.create = (req, res) => {
+    const results = {};
+    res.render('backend/product/create', { results: results, csrfToken: req.csrfToken(), layout: 'layouts/backend/home', user: req.user});
+}
 productController.show = function(req, res) {
-    const postId = req.params.id;
-    Product.findById(postId).populate('author').populate('tags').populate('imageNumber').populate({path:'comments.author', select:'email'}).exec(function (err, admins) {
-      res.send(admins);
+    var postId = req.params.id;
+    Product.findOne({_id: req.params.id}).populate('author').populate('tags').populate('imageNumber').populate({path:'comments.author', select:'email'}).exec(function (err, results) {
+      if (err) {
+        res.redirect("/product/show/"+res._id);
+      }
+      else {
+        res.render('backend/product/show', { results: results, csrfToken: req.csrfToken(), layout: 'layouts/backend/home', user: req.user});
+      }
     });
-};
-productController.create = function(req, res) {
-    res.send('View tạo tài khoản');
-};
-//Add record
-productController.store = function(req, res) {
-    //res.send(req);
+}
+
+productController.store = (req, res) => {
     var datas = {
-        "name": req.body.name,
-        "alias": slugify(req.body.name,'-'),
-        "imagePath": req.body.imagePath,
-        "description": req.body.description,
-        "detail": req.body.detail,
-        "price": req.body.price,
-        "author": req.body.author,
+        name: req.body.name,
+        alias: slugify(req.body.name,'-'),
+        imagePath: req.body.imagePath,
+        imageNumber: req.body.imageNumber,
+        description: req.body.description,
+        detail: req.body.detail,
+        price: req.body.price,
+        category_id: req.body.category_id,
+        title_seo: req.body.title_seo,
+        description_seo: req.body.description_seo,
+        keyword_seo: req.body.keyword_seo
     };
     var post = new Product(datas);
-        post.save(function(err, newPost){
-            res.send(newPost)
+        post.save(function(err, results){
+            res.redirect('/backend/product/show/'+results._id)
         });
-};
+}
 productController.edit = function(req, res) {
     
 };
 
 productController.update = function(req, res) {
     var messenger = {};
-    var data = {
+    var datas = {
         name: req.body.name,
+        imagePath: req.body.imagePath,
+        imageNumber: req.body.imageNumber,
         description: req.body.description,
-    }
+        detail: req.body.detail,
+        price: req.body.price,
+        price_old: req.body.price_old,
+        category_id: req.body.category_id,
+        title_seo: req.body.title_seo,
+        description_seo: req.body.description_seo,
+        keyword_seo: req.body.keyword_seo
+    };
     Product.findOne({'_id': req.params.id}, function(err, result){
-        if(result){
-            Product.findByIdAndUpdate(req.params.id, { $set: data}, { new: true }, function (err, results) {
-                res.send(results);
-            });
+        if(result && result._id!=req.params.id){
+            res.send({"error":0});
         }else{
-            res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
+            Product.findByIdAndUpdate(req.params.id, { $set: datas}, { new: true }, function (err, results) {
+                res.redirect('/backend/product/show/'+req.params.id);
+            })
         }
     });
-};
-
+}
 productController.delete = function(req, res) {
     Product.remove({_id: req.params.id}, function(err) {
       res.json({ "message": "Xóa sản phẩm thành công!" })

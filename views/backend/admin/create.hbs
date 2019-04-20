@@ -9,13 +9,14 @@
 {{/contentFor}}
 
 {{#contentFor "pageScripts"}}
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
 <script src="/gallery/gallery.js"></script>
 {{/contentFor}}
 {{#contentFor "pageJs"}}
   <!-- page script -->
 <script>
 $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip(); 
+    $('[data-toggle="tooltip"]').tooltip();  
 });
 </script>
 {{/contentFor}}
@@ -35,7 +36,7 @@ $(document).ready(function(){
     <!-- Info boxes -->
     <div class="">
         <div class="box">
-            <form action="/admin/store" method="post" enctype="application/x-www-form-urlencoded">
+            <form action="/backend/admin/store" method="post" enctype="application/x-www-form-urlencoded">
                 <div class="box-header">
                     <h3 class="box-title">Thêm tài khoản</h3>
                     <button type="submit" class="btn btn-sm btn-success" style="float:right">
@@ -87,13 +88,18 @@ $(document).ready(function(){
                         <div class="form-group">
                             <label for="image">Ảnh đại diện</label>
                             <div class="clearfix"></div>
-                            <input type="text" id="imageNumber">
-                            <button type="button" class="showImageUpload imagePath clearfix" >
-                                <a class="btn btn-sm btn-primary select_image" data-name="imageNumber" limit="0">Chọn ảnh</a>
-                                <div class="divShowImageUpload imageNumber">
-                                    <img src="/adminator/images/user_default.jpg" alt="">
+                            <input type="text" id="imageNumber" name="imageNumber">
+                            <input type="text" id="imagePath" name="imagePath">
+                            <div class="showImageUpload imagePath clearfix" >
+                                <a class="btn btn-sm btn-primary select_image" onclick=showModalGallery('imageNumber',0) data-colum="imageNumber" limit="0">Chọn ảnh</a>
+                                <div class="show_imageNumber">
+                                    <div class="in_showImageUpload">
+                                        <div class="divShowImageUpload imageNumber">
+                                            <img src="/adminator/images/user_default.jpg" alt="">
+                                        </div>
+                                    </div>
                                 </div>
-                            </button>
+                            </div>
                             </div>
                             <div class="checkbox">
                             <label>
@@ -106,8 +112,8 @@ $(document).ready(function(){
             </form>
         </div>
         <!-- /.box -->
-        
     </div>
     <!-- /.row -->
 </section>
 <!-- /.content -->
+{{> 'backend/managerGallery/modalGallery' }}

@@ -1,20 +1,22 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var mongoose = require('mongoose');
-const cors = require('cors');
+var createError = require('http-errors')
+var express = require('express')
+var path = require('path')
+var cookieParser = require('cookie-parser')
+var logger = require('morgan')
+var mongoose = require('mongoose')
+const cors = require('cors')
+var csrf = require('csurf')
+var csrfProtection = csrf({ cookie: true })
 const bodyParser = require('body-parser');
 // these are require packages that we need
-var hbs = require('express-hbs');
-var passport = require('passport');
-var session = require('express-session');
-var flash = require('connect-flash');
-var validator = require('express-validator');
+var hbs = require('express-hbs')
+var passport = require('passport')
+var session = require('express-session')
+var flash = require('connect-flash')
+var validator = require('express-validator')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index')
+var usersRouter = require('./routes/users')
 // Admin
 var backendDashboardRouter = require('./routes/admin/dashboard');
 var backendAdminRouter = require('./routes/admin/admin');
@@ -80,24 +82,24 @@ app.use(function(req, res, next){
   // }
   next();
 });
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/backend', backendDashboardRouter);
-app.use('/backend/admin/', backendAdminRouter);
-app.use('/backend/user', backendUserRouter);
-app.use('/backend/product', backendProductRouter);
-app.use('/backend/catproduct', backendCatProductRouter);
-app.use('/backend/tag', backendTagRouter);
-app.use('/backend/gallery', backendGalleryRouter);
-app.use('/auth', backendAuthRouter);
+app.use('/', csrfProtection, indexRouter);
+app.use('/users', csrfProtection, usersRouter);
+app.use('/backend', csrfProtection, backendDashboardRouter);
+app.use('/backend/admin/', csrfProtection, backendAdminRouter);
+app.use('/backend/user', csrfProtection, backendUserRouter);
+app.use('/backend/product', csrfProtection, backendProductRouter);
+app.use('/backend/catproduct', csrfProtection, backendCatProductRouter);
+app.use('/backend/tag', csrfProtection, backendTagRouter);
+app.use('/backend/gallery', csrfProtection, backendGalleryRouter);
+app.use('/auth', csrfProtection, backendAuthRouter);
 
-app.use('/api/admin/', adminsRouter);
-app.use('/api/user', apiUserRouter);
-app.use('/api/product', apiProductRouter);
-app.use('/api/catproduct', apiCatProductRouter);
-app.use('/api/tag', apiTagRouter);
-app.use('/api/gallery', apiGalleryRouter);
-app.use('/api/auth', apiAuthRouter);
+app.use('/api/admin/', csrfProtection, adminsRouter);
+app.use('/api/user', csrfProtection, apiUserRouter);
+app.use('/api/product', csrfProtection, apiProductRouter);
+app.use('/api/catproduct', csrfProtection, apiCatProductRouter);
+app.use('/api/tag', csrfProtection, apiTagRouter);
+app.use('/api/gallery', csrfProtection, apiGalleryRouter);
+app.use('/api/auth', csrfProtection, apiAuthRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

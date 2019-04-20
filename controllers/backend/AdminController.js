@@ -1,11 +1,11 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
 var Admin = require("../../models/admin");
+const { check, validationResult } = require('express-validator/check');
 var adminController = {};
 var router = express.Router();
 adminController.index = function(req, res, next) {
-  //console.log(req);
-  Admin.find(function(err, results){
+  Admin.find().populate('imageNumber').exec((err, results) => {
     res.render('backend/admin/index', { results: results, layout: 'layouts/backend/home', user: req.user});
   });
 };
@@ -20,15 +20,21 @@ adminController.getAll = function(req, res, next) {
       next()
   });
 };
-adminController.show = function(req, res) {
-  var useId = req.params.id;
-  Admin.find(useId, { password: 0 }).then((err, results) => {
-    res.render('backend/admin/show', { results: results, layout: 'layouts/backend/home', user: req.user});
-  });
-};
+
 adminController.create = function(req, res) {
   const results = {};
-  res.render('backend/admin/create', { results: results, layout: 'layouts/backend/home', user: req.user});
+  res.render('backend/admin/create', { results: results, csrfToken: req.csrfToken(), layout: 'layouts/backend/home', user: req.user});
+};
+adminController.show = function(req, res) {
+  var postId = req.params.id;
+  Admin.findOne({_id: req.params.id}).populate('imageNumber').exec(function (err, results) {
+    if (err) {
+      res.redirect("/admin/show/"+res._id);
+    }
+    else {
+      res.render('backend/admin/show', { results: results, csrfToken: 'ghg', layout: 'layouts/backend/home', user: req.user});
+    }
+  });
 };
 //Add record
 adminController.store = function(req, res) {
@@ -36,12 +42,20 @@ adminController.store = function(req, res) {
       var newPost = new Admin();
       if(req.body.password){
           var hashedPassword = bcrypt.hashSync(req.body.password, 8);	
-          newPost.password = hashedPassword;				
+          newPost.password = hashedPassword;			
       }
       newPost.name = req.body.name;
       newPost.email = req.body.email;
+      newPost.imageNumber = req.body.imageNumber;
+      newPost.imagePath = req.body.imagePath;
+      newPost.zalo = req.body.zalo;
+      newPost.facebook = req.body.facebook;
+      newPost.gplus = req.body.gplus;
+      newPost.phone = req.body.phone;
+      newPost.website = req.body.website;
+      newPost.address = req.body.address;
       newPost.save(function(err, newPost){
-        res.router('admin/show/'+newPost._id);
+        res.redirect('/backend/admin/show/'+newPost._id);
       });
   });
 };
@@ -63,6 +77,7 @@ adminController.update = function(req, res) {
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
+      imageNumber: req.body.imageNumber,
       zalo: req.body.zalo,
       website: req.body.website,
       facebook: req.body.facebook,
@@ -74,7 +89,7 @@ adminController.update = function(req, res) {
           res.send({"error":0});
       }else{
           Admin.findByIdAndUpdate(req.params.id, { $set: data}, { new: true }, function (err, results) {
-              res.send(results);
+              res.redirect('/backend/admin/show/'+req.params.id);
           });
       }
   });

@@ -44,7 +44,7 @@ userController.store = function(req, res) {
         var newPost = new User();
         if(req.body.password){
             var hashedPassword = bcrypt.hashSync(req.body.password, 8);	
-            newPost.password = hashedPassword;				
+            newPost.password = hashedPassword;			
         }
         newPost.name = req.body.name;
         newPost.email = req.body.email;

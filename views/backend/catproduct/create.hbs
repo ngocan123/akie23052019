@@ -24,11 +24,11 @@ $(document).ready(function(){
 <section class="content-header">
     <h1>
     Dashboard
-    <small>Thêm tài khoản</small>
+    <small>Thêm danh mục</small>
     </h1>
     <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li class="active">Thêm tài khoản</li>
+    <li class="active">Thêm danh mục</li>
     </ol>
 </section>
 <!-- Main content -->
@@ -36,10 +36,10 @@ $(document).ready(function(){
     <!-- Info boxes -->
     <div class="">
         <div class="box">
-            <form action="/backend/product/store" method="post" enctype="application/x-www-form-urlencoded">
+            <form action="/backend/catproduct/store" method="post" enctype="application/x-www-form-urlencoded">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}">
                 <div class="box-header">
-                    <h3 class="box-title">Thêm tài khoản</h3>
+                    <h3 class="box-title">Thêm danh mục</h3>
                     <button type="submit" class="btn btn-sm btn-success" style="float:right">
                         <i class="fa fa-plus"></i> Thêm
                     </button>
@@ -48,7 +48,6 @@ $(document).ready(function(){
                 <div class="box-body">
                     <ul class="nav nav-tabs">
                       <li class="active"><a data-toggle="tab" href="#home"><strong>Chung</strong></a></li>
-                      <li><a data-toggle="tab" href="#menu1"><strong>Thống số</strong></a></li>
                       <li><a data-toggle="tab" href="#menu2"><strong>Ảnh</strong></a></li>
                     </ul>
                     <div class="tab-content">
@@ -56,16 +55,22 @@ $(document).ready(function(){
                         <div class="h15"></div>
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="name">Tên sản phẩm</label>
+                                <label for="name">Tên danh mục</label>
                                 <input type="text" name="name" class="form-control" placeholder="Tên sản phẩm" required>
                             </div>
                             <div class="form-group">
-                                <label for="name">Mô tả sản phẩm</label>
+                                <label for="category_id">Danh mục cha</label>
+                                <select name="category_id" class="form-control" id="category_id">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Mô tả danh mục</label>
                                 <textarea name="" id="" class="form-control" placeholder="Mô tả sản phẩm" rows="3"></textarea>
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="name">Tiêu đề seo</label>
+                                <label for="title_seo">Tiêu đề seo</label>
                                 <input type="text" name="title_seo" class="form-control" placeholder="Tiêu đề seo">
                             </div>
                             <div class="form-group">
@@ -75,27 +80,6 @@ $(document).ready(function(){
                             <div class="form-group">
                                 <label for="keyword_seo">Từ khóa seo</label>
                                 <textarea name="keyword_seo" id="keyword_seo" class="form-control" placeholder="Từ khóa seo" rows="3"></textarea>
-                            </div>
-                        </div>
-                      </div>
-                      <div id="menu1" class="tab-pane fade">
-                        <div class="h15"></div>
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                              <label for="price">Giá sản phẩm</label>
-                              <input type="number" name="price" class="form-control" placeholder="Giá sản phẩm">
-                            </div>
-                            <div class="form-group">
-                              <label for="price_old">Giá gốc</label>
-                              <input type="number" name="price_old" class="form-control" placeholder="Giá gốc">
-                            </div>
-                            <div class="form-group">
-                                <label for="category_id">Danh mục sản phẩm</label>
-                                <select name="category_id" class="form-control" id="category_id" required>
-                                  <option value="">Danh mục sản phẩm</option>
-                                  <option value="0">Máy tính</option>
-                                  <option value="0">Thời trang</option>
-                                </select>
                             </div>
                         </div>
                       </div>

@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+var csrf = require('csurf')
+var csrfProtection = csrf({ cookie: true })
 const fs = require('fs');
 const Gallery = require("../../models/gallery");
 //========Fix upload image
@@ -13,7 +15,13 @@ galleryController.showModalGallery = function(req, res, next) {
   // const result = {
   //   title: 'hk'
   // };
-  res.render('backend/managerGallery/modalGallery',{ result: 'ok'});
+  res.file('backend/managerGallery/modalGallery',{ result: 'ok'});
+};
+//Add record
+galleryController.lists = function(req, res, next) {
+  Gallery.find().exec((err, post) => {
+      res.send(post);
+  });
 };
 //Add record
 galleryController.getAll = function(req, res, next) {
@@ -31,10 +39,27 @@ galleryController.show = function(req, res) {
       res.send(admins);
     });
 };
-galleryController.store = function(req, res) {
-  //fs.mkdirSync('public/uploads/product');
-  //res.send(fd);
-  //res.send('ok');
+galleryController.stores = function(req, res){
+  var storage =   multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, './public/uploads');
+    },
+    filename: function (req, file, callback) {
+      callback(null, file.fieldname + '-' + Date.now());
+    }
+  });
+  
+  var upload = multer({ storage : storage}).single('userPhoto');
+
+  upload(req,res,function(err) {
+      if(err) {
+          return res.end("Error uploading file.");
+      }
+      res.end("File is uploaded");
+  });
+}
+galleryController.store =function(req, res){
+  //res.send(req);
   var data = {
     title: '',
     path: '',
@@ -44,13 +69,54 @@ galleryController.store = function(req, res) {
   }
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-    cb(null, 'public/uploads/products')
+    cb(null, 'public/uploads/admins')
   },
   filename: function (req, file, cb) {
       cb(null, Date.now() + '-' +file.originalname )
   }
   })
-  var upload = multer({ storage: storage }).single('file');
+  var upload = multer({ storage: storage }).single('file_gallery');
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+        return res.status(500).json(err)
+    } else if (err) {
+        return res.status(500).json(err)
+    }
+    datas = {
+      "title": '',
+      "path": req.file.path.replace('public', ''),
+      "size": req.file.size,
+      "filename": req.file.filename,
+      "destination": req.file.destination,
+    }
+  //res.send(datas);
+  var newPost = new Gallery(datas);
+      newPost.save(function(err, results){
+          res.send(results);
+      });
+    //return res.status(200).send(req.file);
+  })
+}
+
+
+
+galleryController.stores = function(req, res) {
+  var data = {
+    title: '',
+    path: '',
+    size: '',
+    filename: '',
+    destination: '',
+  }
+  var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+    cb(null, 'public/uploads/admins')
+  },
+  filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' +file.originalname )
+  }
+  })
+  var upload = multer({ storage: storage }).single('file_gallery');
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
         return res.status(500).json(err)

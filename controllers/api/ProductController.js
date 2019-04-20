@@ -1,4 +1,6 @@
 const express = require('express');
+var csrf = require('csurf')
+var csrfProtection = csrf({ cookie: true })
 const slugify = require('slugify');
 slugify.extend({'đ': 'd'})
 const Product = require("../../models/product");
