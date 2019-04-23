@@ -96,7 +96,7 @@ productController.saveProductAndTag = function(req, res){
     const tags = request.tags.map(function(item, index){
         return { label : item };  // this is loop and prepare tags array to save,
     })
-    //res.send(tags);
+    res.send(tags);
     Tag.insertMany(tags, {ordered:false}, function(err, savedtags){
         if(err){
             if(err.code=="11000"){  // 11000 is duplicate error code

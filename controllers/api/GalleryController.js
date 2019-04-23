@@ -8,25 +8,20 @@ var cors = require('cors');
 app.use(cors());
 const galleryController = {};
 //Add record
-galleryController.getAll = function(req, res, next) {
+galleryController.getAll = (req, res) => {
   Gallery.find().exec((err, post) => {
       res.send(post)
   });
-};
+}
+
 galleryController.show = function(req, res) {
-  // const postId = req.params.id;
-  // Product.find(postId).then((err, result) => {
-  //   res.send(result);
-  // });
   const postId = req.params.id;
     Gallery.findById(postId).exec(function (err, admins) {
       res.send(admins);
     });
 };
-galleryController.store = function(req, res) {
-  //fs.mkdirSync('public/uploads/product');
-  //res.send(fd);
-  //res.send('ok');
+
+galleryController.store = (req, res) => {
   var data = {
     title: '',
     path: '',
@@ -36,11 +31,11 @@ galleryController.store = function(req, res) {
   }
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-    cb(null, 'public/uploads/products')
-  },
-  filename: function (req, file, cb) {
+      cb(null, 'public/uploads')
+    },
+    filename: function (req, file, cb) {
       cb(null, Date.now() + '-' +file.originalname )
-  }
+    }
   })
   var upload = multer({ storage: storage }).single('file');
   upload(req, res, function (err) {

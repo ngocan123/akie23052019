@@ -31,7 +31,9 @@ var adminsRouter = require('./routes/api/admin');
 var apiUserRouter = require('./routes/api/users');
 var apiProductRouter = require('./routes/api/product');
 var apiCatProductRouter = require('./routes/api/catproduct');
+var apiSupplierRouter = require('./routes/api/supplier');
 var apiTagRouter = require('./routes/api/tag');
+var apiSettingRouter = require('./routes/api/setting');
 var apiGalleryRouter = require('./routes/api/gallery');
 var apiAuthRouter = require('./routes/auth');
 
@@ -42,7 +44,7 @@ router.use(bodyParser.urlencoded({ extended: false })); // for json return
 router.use(bodyParser.json());  // for json return 
 var uri = 'mongodb://shop2019:shop2019@cluster0-shard-00-00-uwpjt.mongodb.net:27017,cluster0-shard-00-01-uwpjt.mongodb.net:27017,cluster0-shard-00-02-uwpjt.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true';
 mongoose.connect(uri, { useNewUrlParser: true });
-require('./config/passports');
+//require('./config/passports');
 app.engine('hbs', hbs.express4({
   defaultLayout: 'views/layouts/layout',
   layoutsDir: __dirname + '/views', 
@@ -56,7 +58,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // right here we need to allow domain
 const corsOptions = {
-	origin: ['http://localhost:3000','https://reactbackend2.herokuapp.com/'],
+	origin: [ 'http://localhost:3000', 'http://localhost:3001' ],
 	credentials:true,
 }
 app.use(cors(corsOptions));
@@ -71,35 +73,37 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next){
   //console.log(req.isAuthenticated('local.authLogin'));
-  res.locals.test = 'test bien global'
-  res.locals.authLogin = req.isAuthenticated('local.authLogin');
-  if(req.isAuthenticated()){
-    console.log(req.user);
-    res.locals.user = req.user;
-  }
+  //res.locals.test = 'test bien global'
+  //res.locals.authLogin = req.isAuthenticated('local.authLogin');
+  // if(req.isAuthenticated()){
+  //   console.log(req.user);
+  //   res.locals.user = req.user;
+  // }
   // if(!res.locals.authLogin){
   //   res.redirect('/auth/login');
   // }
   next();
 });
-app.use('/', csrfProtection, indexRouter);
-app.use('/users', csrfProtection, usersRouter);
-app.use('/backend', csrfProtection, backendDashboardRouter);
-app.use('/backend/admin/', csrfProtection, backendAdminRouter);
-app.use('/backend/user', csrfProtection, backendUserRouter);
-app.use('/backend/product', csrfProtection, backendProductRouter);
-app.use('/backend/catproduct', csrfProtection, backendCatProductRouter);
-app.use('/backend/tag', csrfProtection, backendTagRouter);
-app.use('/backend/gallery', csrfProtection, backendGalleryRouter);
-app.use('/auth', csrfProtection, backendAuthRouter);
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/backend', backendDashboardRouter);
+app.use('/backend/admin/', backendAdminRouter);
+app.use('/backend/user', backendUserRouter);
+app.use('/backend/product', backendProductRouter);
+app.use('/backend/catproduct', backendCatProductRouter);
+app.use('/backend/tag', backendTagRouter);
+app.use('/backend/gallery', backendGalleryRouter);
+app.use('/auth', backendAuthRouter);
 
-app.use('/api/admin/', csrfProtection, adminsRouter);
-app.use('/api/user', csrfProtection, apiUserRouter);
-app.use('/api/product', csrfProtection, apiProductRouter);
-app.use('/api/catproduct', csrfProtection, apiCatProductRouter);
-app.use('/api/tag', csrfProtection, apiTagRouter);
-app.use('/api/gallery', csrfProtection, apiGalleryRouter);
-app.use('/api/auth', csrfProtection, apiAuthRouter);
+app.use('/api/admin/', adminsRouter);
+app.use('/api/user', apiUserRouter);
+app.use('/api/product', apiProductRouter);
+app.use('/api/catproduct', apiCatProductRouter);
+app.use('/api/supplier', apiSupplierRouter);
+app.use('/api/tag', apiTagRouter);
+app.use('/api/setting', apiSettingRouter);
+app.use('/api/gallery', apiGalleryRouter);
+app.use('/api/auth', apiAuthRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

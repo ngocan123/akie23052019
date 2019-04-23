@@ -1,12 +1,10 @@
-const express = require('express');
-var csrf = require('csurf')
-var csrfProtection = csrf({ cookie: true })
-const slugify = require('slugify');
+const express = require('express')
+const slugify = require('slugify')
 slugify.extend({'đ': 'd'})
-const Product = require("../../models/product");
-const Tag = require("../../models/tag");
-const url = require('url');
-const productController = {};
+const Product = require("../../models/product")
+const Tag = require("../../models/tag")
+const url = require('url')
+const productController = {}
 productController.list = function(req, res, next) {
     //res.send(req);
     const filter = {};
@@ -30,14 +28,7 @@ productController.list = function(req, res, next) {
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .populate('author').populate('tags').populate('imageNumber').exec((err, posts) => {
-            // Product.find(filter).count().exec((err, posts) => {
-            //     res.send({
-            //         post:post,
-            //         current: page,
-            //         pages: Math.ceil(count / perPage)
-            //     })
-            // });
-            Product.find(filter).count().exec(function(err, count) {
+            Product.find(filter).countDocuments().exec(function(err, count) {
                 res.send({
                     posts: posts,
                     current: page,
@@ -45,7 +36,6 @@ productController.list = function(req, res, next) {
                     count:count,
                 })
             })
-            //res.send(post)
         });
     }else{
         Product.populate('author').populate('tags').exec((err, post) => {
@@ -74,7 +64,6 @@ productController.create = function(req, res) {
 };
 //Add record
 productController.store = function(req, res) {
-    //res.send(req);
     var datas = {
         "name": req.body.name,
         "alias": slugify(req.body.name,'-'),
@@ -110,18 +99,17 @@ productController.update = function(req, res) {
     });
 };
 
-productController.delete = function(req, res) {
+productController.delete = (req, res) => {
     Product.remove({_id: req.params.id}, function(err) {
       res.json({ "message": "Xóa sản phẩm thành công!" })
     });
-  };
-productController.saveProductAndTag = function(req, res){
-    // first save tag
+}
+productController.saveProductAndTag = (req, res, next) => {
     const request = req.body;
+    //res.send(request);
     const tags = request.tags.map(function(item, index){
         return { label : item };  // this is loop and prepare tags array to save,
-    })
-    //res.send(tags);
+    });
     Tag.insertMany(tags, {ordered:false}, function(err, savedtags){
         if(err){
             if(err.code=="11000"){  // 11000 is duplicate error code
@@ -173,15 +161,16 @@ productController.getAlltags = function(req, res, next){
 }
 productController.saveProductAndTagAsync = async function(req, res, next){
     const request = req.body;
-		let returnres;
-		if(request._id){
-			const post = await Product.findById(request._id);
-			returnres = await post.savePostTags(request);		
-		}else{
-			const post = new Product();		
-			returnres = await post.savePostTags(request);
-		}		
-		res.send(returnres);
+    //res.send(req.body);
+    let returnres;
+    if(request._id){
+        const post = await Product.findById(request._id);
+        returnres = await post.savePostTags(request);		
+    }else{
+        const post = new Product();		
+        returnres = await post.savePostTags(request);
+    }		
+    res.send(returnres);
 }
 productController.remove = function(req, res){
     const request = req.body;
