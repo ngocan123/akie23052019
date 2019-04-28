@@ -3,6 +3,7 @@ var router = express.Router()
 const productController = require('../../controllers/api/ProductController')
 const verifyToken = require('../../Middlewares/JwtAuthMiddleware')
 router.get('/list', productController.list);
+router.get('/getAlls', productController.getAlls);
 router.get('/getAll', productController.getAll);
 router.get('/getAlltags', productController.getAlltags);
 router.get('/show/:id', productController.show);

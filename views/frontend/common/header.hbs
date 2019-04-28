@@ -5,8 +5,8 @@
         <div class="container">
             <!-- hotline -->
             <ul class=" nav-left" >
-                <li ><span><i class="fa fa-phone" aria-hidden="true"></i>+ 00 123 456 789</span></li>
-                <li ><span><i class="fa fa-envelope" aria-hidden="true"></i> Contact us today !</span></li>
+                <li ><span><i class="fa fa-phone" aria-hidden="true"></i>{{settings.phone}}</span></li>
+                <li ><span><i class="fa fa-envelope" aria-hidden="true"></i> {{settings.email}}</span></li>
                 <li class="dropdown switcher  switcher-currency">
                     <a data-toggle="dropdown" role="button" href="#" class="dropdown-toggle switcher-trigger"><span>USD</span> <i aria-hidden="true" class="fa fa-angle-down"></i></a>
                     <ul class="dropdown-menu switcher-options ">
@@ -130,7 +130,7 @@
                 <div class="col-md-3 nav-left">
                     <!-- logo -->
                     <strong class="logo">
-                        <a href=""><img src="template/images/media/index2/logo.png" alt="logo"></a>
+                        <a href=""><img src={{settings.logo.path}} alt={{settings.name}}></a>
                     </strong><!-- logo -->
                 </div>
 
@@ -234,21 +234,21 @@
                     <!-- block search -->
                     <div class="block-search">
                         <div class="block-title">
-                            <span>Search</span>
+                            <span>Tìm kiếm</span>
                         </div>
                         <div class="block-content">
                             
                             <div class="form-search">
                                 <form>
                                     <div class="box-group">
-                                        <input type="text" class="form-control" placeholder="Search here...">
-                                        <button class="btn btn-search" type="button"><span>search</span></button>
+                                        <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
+                                        <button class="btn btn-search" type="button"><span>Tìm kiếm</span></button>
                                     </div>
                                 </form>
                             </div>
                             <div class="categori-search  ">
-                                <select data-placeholder="All Categories" class="categori-search-option">
-                                    <option>All Categories</option>
+                                <select data-placeholder="Tất cả danh mục" class="categori-search-option">
+                                    <option>Tất cả danh mục</option>
                                     <option>Fashion</option>
                                     <option>Tops Blouses</option>
                                     <option>Clothing</option>
@@ -276,11 +276,11 @@
                 <div class="block-nav-categori">
 
                     <div class="block-title">
-                        <span>Categories</span>
+                        <span>Danh mục</span>
                     </div>
 
                     <div class="block-content">
-                        <div class="clearfix"><span data-action="close-cat" class="close-cate"><span>Categories</span></span></div>
+                        <div class="clearfix"><span data-action="close-cat" class="close-cate"><span>Danh mục</span></span></div>
                         <ul class="ui-categori">
                             <li class="parent">
                                 <a href="">
@@ -569,7 +569,7 @@
                         </ul>
 
                         <div class="view-all-categori">
-                            <a  class="open-cate btn-view-all">All Categories</a>
+                            <a  class="open-cate btn-view-all">Tất cả danh mục</a>
                         </div>
                     </div>
                     
@@ -577,10 +577,10 @@
 
                 <!-- menu -->
                 <div class="block-nav-menu">
-                    <div class="clearfix"><span data-action="close-nav" class="close-nav"><span>close</span></span></div>
+                    <div class="clearfix"><span data-action="close-nav" class="close-nav"><span>Đóng</span></span></div>
                     <ul class="ui-menu">
                         <li class="parent parent-megamenu active">
-                            <a href="index.html">Home</a>
+                            <a href="index.html">Trang chủ</a>
                             <span class="toggle-submenu"></span>
                             <div class="megamenu drop-menu demo-menu">
                                 <ul>

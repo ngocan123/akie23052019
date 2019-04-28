@@ -43,6 +43,11 @@ productController.list = function(req, res, next) {
         });
     }
 };
+productController.getAlls = function(req, res, next) {
+    Product.find({}).exec((err, post) => {
+        res.send(post)
+    });
+};
 productController.getAll = function(req, res, next) {
     const filter = {};
     const query = url.parse(req.url,true).query;

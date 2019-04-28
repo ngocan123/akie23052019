@@ -3,7 +3,10 @@ var Schema = mongoose.Schema;
 var CatProductSchema = new Schema({
     name: { type: String },
     description: { type: String },
-    parent_id: { type: Number },
+    parent_id: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CatProduct'
+     },
     alias: { type: String },
     imageNumber: { 
         type: mongoose.Schema.Types.ObjectId,

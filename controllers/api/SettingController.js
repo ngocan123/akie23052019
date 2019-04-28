@@ -4,7 +4,7 @@ const url = require('url');
 const settingController = {};
 settingController.show = function(req, res) {
     const postlang = req.params.lang;
-    Setting.findOne({'lang': req.params.lang}, function(err, result){
+    Setting.findOne({'lang': req.params.lang}).populate('logo').populate('favicon').exec( function(err, result){
         if(err){
             res.send(err);
         }
@@ -16,7 +16,9 @@ settingController.show = function(req, res) {
 settingController.update = function(req, res) {
     var data = {
         name: req.body.name,
+        slogan: req.body.slogan,
         website: req.body.website,
+        address: req.body.address,
         logo: req.body.logo,
         favicon: req.body.favicon,
         phone: req.body.phone,

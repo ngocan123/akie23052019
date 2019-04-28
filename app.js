@@ -10,6 +10,8 @@ var csrfProtection = csrf({ cookie: true })
 const bodyParser = require('body-parser');
 // these are require packages that we need
 var hbs = require('express-hbs')
+var tools = require('./modules/tools');
+//hbs.registerPartials(__dirname + '/views/partials')
 var passport = require('passport')
 var session = require('express-session')
 var flash = require('connect-flash')
@@ -42,14 +44,46 @@ const router = express.Router()   // this is create router
 // add this line because intend to accept only json para and only return json
 router.use(bodyParser.urlencoded({ extended: false })); // for json return
 router.use(bodyParser.json());  // for json return 
-var uri = 'mongodb://shop2019:shop2019@cluster0-shard-00-00-uwpjt.mongodb.net:27017,cluster0-shard-00-01-uwpjt.mongodb.net:27017,cluster0-shard-00-02-uwpjt.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true';
-mongoose.connect(uri, { useNewUrlParser: true });
+
+//var uri = 'mongodb://shop2019:shop2019@cluster0-shard-00-00-uwpjt.mongodb.net:27017,cluster0-shard-00-01-uwpjt.mongodb.net:27017,cluster0-shard-00-02-uwpjt.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true';
+// let options = {
+//   useNewUrlParser: true,
+//   db: { native_parse: true },
+//   server: { poolSize: 5 },
+//   user: 'shop123',
+//   pass: '12345678'
+// }
+//var uri = 'mongodb://shop123:12345678@163.44.206.217:27017/test';
+var uri = 'mongodb://163.44.206.217:27017/test';
+// Connecting local mongodb database named test
+mongoose.connect(uri, { useNewUrlParser: true }).then(
+  () => {
+    console.log('Connect success!')
+  },
+  err => {
+    console.log('Connect not success!')
+  }
+);
+
+
+// var uri = 'mongodb://shop123:12345678@163.44.206.217:27017/test';
+// mongoose.Promise = global.Promise;
+// mongoose.connect(uri, {useNewUrlParser: true})
+// Connect to MongoDB:
+//mongoose.connect(uri,{ useNewUrlParser: true })
 //require('./config/passports');
 app.engine('hbs', hbs.express4({
   defaultLayout: 'views/layouts/layout',
-  layoutsDir: __dirname + '/views', 
+  layoutsDir: __dirname + '/views/partials', 
   partialsDir: __dirname + '/views'
 }));
+
+// // partials will be stored in /views/partials
+// hbs.registerPartials(__dirname + '/views/partials');
+// // expose response locals and app locals to the templating system
+//hbs.localsAsTemplateData(app);
+
+
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
@@ -58,7 +92,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // right here we need to allow domain
 const corsOptions = {
-	origin: [ 'http://localhost:3000', 'http://localhost:3001' ],
+	origin: [ 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:5000' ],
 	credentials:true,
 }
 app.use(cors(corsOptions));
@@ -71,9 +105,19 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(tools.onRequestStart);
 app.use(function(req, res, next){
+  const Setting = require('./models/setting');
+  Setting.findOne({lang:'vi'}).populate('favicon').populate('logo').exec(function(err, results){
+    res.locals.setting1 = results;
+  });
+  //res.send(res.locals.setting1);
   //console.log(req.isAuthenticated('local.authLogin'));
-  //res.locals.test = 'test bien global'
+  res.locals.test = 'test bien global';
+  res.locals.jso = [
+    { name: 'abc' },
+    { name: 'bncd' }
+  ]
   //res.locals.authLogin = req.isAuthenticated('local.authLogin');
   // if(req.isAuthenticated()){
   //   console.log(req.user);

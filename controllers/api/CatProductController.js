@@ -3,12 +3,10 @@ const slugify = require('slugify');
 slugify.extend({'đ': 'd'})
 const CatProduct = require("../../models/catproduct");
 const url = require('url');
-const catproductController = {};
+const catproductController = {}
 catproductController.list = function(req, res, next) {
-    //res.send(req);
     const filter = {};
     const query = url.parse(req.url,true).query;
-    //===================paginattion
     var perPage = query.perPage || 10
     var page = query.page || 1
     //===================end pagination
@@ -24,8 +22,7 @@ catproductController.list = function(req, res, next) {
         //filter.page = page;
         CatProduct.find(filter)
         .skip((perPage * page) - perPage)
-        .limit(perPage)
-        .populate('author').populate('tags').populate('imageNumber').exec((err, posts) => {
+        .limit(perPage).populate('imageNumber').exec((err, posts) => {
             CatProduct.find(filter).countDocuments().exec(function(err, count) {
                 res.send({
                     posts: posts,
@@ -36,33 +33,17 @@ catproductController.list = function(req, res, next) {
             })
         });
     }else{
-        CatProduct.populate('author').populate('tags').exec((err, post) => {
+        CatProduct.populate('imageNumber').exec((err, post) => {
             res.send(post)
         });
     }
 };
 catproductController.getAll = function(req, res, next) {
-    const filter = {};
-    const query = url.parse(req.url,true).query;
-    if(query.author){
-        filter.author = query.author;
-    }
-    CatProduct.find(filter).populate('author').populate('tags').exec((err, post) => {
+    CatProduct.find({}).exec((err, post) => {
         res.send(post)
     });
-};
-catproductController.show = function(req, res) {
-    const postId = req.params.id;
-    CatProduct.findById(postId).populate('author').populate('tags').populate('imageNumber').populate({path:'comments.author', select:'email'}).exec(function (err, admins) {
-      res.send(admins);
-    });
-};
-catproductController.create = function(req, res) {
-    res.send('View tạo tài khoản');
-};
-//Add record
-catproductController.store = function(req, res) {
-    //res.send(req);
+}
+catproductController.store = (req, res) => {
     var datas = {
         "name": req.body.name,
         "alias": slugify(req.body.name,'-'),
@@ -71,14 +52,22 @@ catproductController.store = function(req, res) {
         "description": req.body.description,
         "parent_id": req.body.parent_id,
         "title_seo": req.body.title_seo,
-        "keyword_seo": req.body.keyword_seo,
         "description_seo": req.body.description_seo,
-    };
+        "keyword_seo": req.body.keyword_seo,
+    }
     var post = new CatProduct(datas);
-        post.save(function(err, newPost){
-            res.send(newPost)
-        });
+    res.send(post);
+    post.save(function(err, newPost){
+        res.send(newPost)
+    });
 };
+catproductController.show = function(req, res) {
+    const postId = req.params.id;
+    CatProduct.findById(postId).populate('imageNumber').populate('parent_id').exec(function (err, admins) {
+      res.send(admins);
+    });
+}
+
 catproductController.update = function(req, res) {
     var data = {
         name: req.body.name,
