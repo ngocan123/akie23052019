@@ -1,13 +1,11 @@
-var express = require('express');
-var bcrypt = require('bcryptjs');
-var Admin = require("../../models/admin");
-var adminController = {};
-var router = express.Router();
+var bcrypt = require('bcryptjs')
+var Admin = require("../../models/admin")
+var adminController = {}
 adminController.list = function(req, res, next) {
-  Admin.find(function(err, docs){
-    res.json(docs);
-  });
-};
+  Admin.find({}).exec((err, results) => {
+    res.json(results)
+  })
+}
 adminController.getAll = function(req, res, next) {
   Admin.find({}, { password: 0 }).then((err, users) => {
       if(err)
@@ -19,16 +17,22 @@ adminController.getAll = function(req, res, next) {
       next()
   });
 };
+// adminController.show = function(req, res) {
+//   var useId = req.params.id;
+//   Admin.find(useId, { password: 0 }).then((err, users) => {
+//       if(err)
+//           res.send(err)
+//       else if(!users)
+//           res.send(404)
+//       else
+//           res.send(users)
+//       next()
+//   });
+// };
 adminController.show = function(req, res) {
-  var useId = req.params.id;
-  Admin.find(useId, { password: 0 }).then((err, users) => {
-      if(err)
-          res.send(err)
-      else if(!users)
-          res.send(404)
-      else
-          res.send(users)
-      next()
+  const postId = req.params.id;
+  Admin.findById(postId).populate('imageNumber').exec(function (err, admins) {
+    res.send(admins);
   });
 };
 adminController.create = function(req, res) {
@@ -44,6 +48,10 @@ adminController.store = function(req, res) {
       }
       newPost.name = req.body.name;
       newPost.email = req.body.email;
+      newPost.phone = req.body.phone;
+      newPost.imageNumber = req.body.imageNumber;
+      newPost.imagePath = req.body.imagePath;
+      newPost.description = req.body.description;
       newPost.save(function(err, newPost){
         if(err){
           res.send(err)
@@ -51,31 +59,18 @@ adminController.store = function(req, res) {
           res.send(newPost)
         }
       });
-  });
-};
-adminController.edit = function(req, res) {
-  Admin.findOne({_id: req.params.id}).exec(function (err, results) {
-    if (err) {
-      res.send(err);
-    }
-    else {
-      res.send(results);
-    }
-  });
+  })
 };
 
 adminController.update = function(req, res) {
   
-  var messenger = {};
-  var data = {
+  let data = {
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
-      zalo: req.body.zalo,
-      website: req.body.website,
-      facebook: req.body.facebook,
-      gplus: req.body.gplus,
-      address: req.body.address,
+      description: req.body.description,
+      imageNumber: req.body.imageNumber,
+      imagePath: req.body.imagePath
   }
   Admin.findOne({'email': req.body.email}, function(err, result){
       if(result && result._id!=req.params.id){
@@ -98,4 +93,14 @@ adminController.delete = function(req, res) {
     }
   });
 };
+adminController.remove = function(req, res){
+  const request = req.body;
+  Admin.findByIdAndRemove(request._id, (err, post) => {
+      if(err){
+          res.send(err);
+      }else{
+          res.send({post: post, message:'deleted'});
+      }
+  });
+}
 module.exports = adminController;

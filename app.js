@@ -30,6 +30,10 @@ var backendGalleryRouter = require('./routes/admin/gallery');
 var backendAuthRouter = require('./routes/admin/auth');
 // Api
 var adminsRouter = require('./routes/api/admin');
+var apiRoleRouter = require('./routes/api/role');
+var apiMenuRouter = require('./routes/api/menu');
+var apiPositionmenuRouter = require('./routes/api/positionmenu');
+var apiPermissionRouter = require('./routes/api/permission');
 var apiUserRouter = require('./routes/api/users');
 var apiProductRouter = require('./routes/api/product');
 var apiCatProductRouter = require('./routes/api/catproduct');
@@ -53,24 +57,17 @@ router.use(bodyParser.json());  // for json return
 //   user: 'shop123',
 //   pass: '12345678'
 // }
-//var uri = 'mongodb://shop123:12345678@163.44.206.217:27017/test';
-var uri = 'mongodb://163.44.206.217:27017/test';
+var uri = 'mongodb://shop123:12345678@163.44.206.217:27017/test';
+//var uri = 'mongodb://127.0.0.1:27017/test';
 // Connecting local mongodb database named test
-mongoose.connect(uri, { useNewUrlParser: true }).then(
-  () => {
-    console.log('Connect success!')
-  },
-  err => {
-    console.log('Connect not success!')
-  }
-);
+mongoose.connect(uri, { useNewUrlParser: true });
 
 
 // var uri = 'mongodb://shop123:12345678@163.44.206.217:27017/test';
 // mongoose.Promise = global.Promise;
 // mongoose.connect(uri, {useNewUrlParser: true})
 // Connect to MongoDB:
-//mongoose.connect(uri,{ useNewUrlParser: true })
+// mongoose.connect(uri,{ useNewUrlParser: true })
 //require('./config/passports');
 app.engine('hbs', hbs.express4({
   defaultLayout: 'views/layouts/layout',
@@ -137,9 +134,13 @@ app.use('/backend/product', backendProductRouter);
 app.use('/backend/catproduct', backendCatProductRouter);
 app.use('/backend/tag', backendTagRouter);
 app.use('/backend/gallery', backendGalleryRouter);
-app.use('/auth', backendAuthRouter);
+app.use('/backend/auth', backendAuthRouter);
 
-app.use('/api/admin/', adminsRouter);
+app.use('/api/admin', adminsRouter);
+app.use('/api/role', apiRoleRouter);
+app.use('/api/menu', apiMenuRouter);
+app.use('/api/positionmenu', apiPositionmenuRouter);
+app.use('/api/permission', apiPermissionRouter);
 app.use('/api/user', apiUserRouter);
 app.use('/api/product', apiProductRouter);
 app.use('/api/catproduct', apiCatProductRouter);

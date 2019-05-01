@@ -6,7 +6,10 @@ const Gallery = require('./gallery');
 var productSchema = new Schema({
     name: { type: String },
     alias: { type: String },
-    category_id: { type: Number },
+    category_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CatProduct'
+    },
     imagePath: { type: String },
     price: { type: Number },
     price_old: { type: Number },
@@ -15,11 +18,11 @@ var productSchema = new Schema({
     imageNumber: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Gallery'
-     },
+    },
     author: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin'
-     },
+    },
     comments: [
         {
             author: {
@@ -28,8 +31,8 @@ var productSchema = new Schema({
             },
             text: String
         }
-     ],
-     tags:[
+    ],
+    tags:[
             {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Tag'
@@ -38,8 +41,7 @@ var productSchema = new Schema({
     title_seo: { type: String },
     description_seo: { type: String },
     keyword_seo: { type: String },
-});
-
+})
 // this is a kind of adding custom method to model
 productSchema.methods.savePostTags = async function(request){
     // first save tag

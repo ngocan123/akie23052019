@@ -27,6 +27,7 @@ productController.list = function(req, res, next) {
         Product.find(filter)
         .skip((perPage * page) - perPage)
         .limit(perPage)
+        .populate('category_id')
         .populate('author').populate('tags').populate('imageNumber').exec((err, posts) => {
             Product.find(filter).countDocuments().exec(function(err, count) {
                 res.send({
@@ -44,6 +45,7 @@ productController.list = function(req, res, next) {
     }
 };
 productController.getAlls = function(req, res, next) {
+    //res.send('okok');
     Product.find({}).exec((err, post) => {
         res.send(post)
     });
@@ -60,7 +62,7 @@ productController.getAll = function(req, res, next) {
 };
 productController.show = function(req, res) {
     const postId = req.params.id;
-    Product.findById(postId).populate('author').populate('tags').populate('imageNumber').populate({path:'comments.author', select:'email'}).exec(function (err, admins) {
+    Product.findById(postId).populate('category_id').populate('author').populate('tags').populate('imageNumber').populate({path:'comments.author', select:'email'}).exec(function (err, admins) {
       res.send(admins);
     });
 };
@@ -82,11 +84,7 @@ productController.store = function(req, res) {
         post.save(function(err, newPost){
             res.send(newPost)
         });
-};
-productController.edit = function(req, res) {
-    
-};
-
+}
 productController.update = function(req, res) {
     var messenger = {};
     var data = {
@@ -110,8 +108,7 @@ productController.delete = (req, res) => {
     });
 }
 productController.saveProductAndTag = (req, res, next) => {
-    const request = req.body;
-    //res.send(request);
+    const request = req.body
     const tags = request.tags.map(function(item, index){
         return { label : item };  // this is loop and prepare tags array to save,
     });
@@ -165,8 +162,7 @@ productController.getAlltags = function(req, res, next){
     });
 }
 productController.saveProductAndTagAsync = async function(req, res, next){
-    const request = req.body;
-    //res.send(req.body);
+    const request = req.body
     let returnres;
     if(request._id){
         const post = await Product.findById(request._id);

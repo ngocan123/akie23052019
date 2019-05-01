@@ -20,7 +20,7 @@ catproductController.list = function(req, res, next) {
         // https://stackoverflow.com/questions/33898159/mongoose-where-query-with-or
         filter.$or = [{name: keyword}, {description:keyword}]
         //filter.page = page;
-        CatProduct.find(filter)
+        CatProduct.find(filter).populate('parent_id')
         .skip((perPage * page) - perPage)
         .limit(perPage).populate('imageNumber').exec((err, posts) => {
             CatProduct.find(filter).countDocuments().exec(function(err, count) {
@@ -39,7 +39,7 @@ catproductController.list = function(req, res, next) {
     }
 };
 catproductController.getAll = function(req, res, next) {
-    CatProduct.find({}).exec((err, post) => {
+    CatProduct.find({}).populate('parent_id').exec((err, post) => {
         res.send(post)
     });
 }
@@ -56,10 +56,9 @@ catproductController.store = (req, res) => {
         "keyword_seo": req.body.keyword_seo,
     }
     var post = new CatProduct(datas);
-    res.send(post);
-    post.save(function(err, newPost){
-        res.send(newPost)
-    });
+        post.save(function(err, newPost){
+            res.send(newPost)
+        });
 };
 catproductController.show = function(req, res) {
     const postId = req.params.id;

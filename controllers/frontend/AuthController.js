@@ -6,9 +6,8 @@ const authController = {};
 // login user
 authController.loginAttempt = function(req, res, next){
     Admin.findOne({ email: req.body.email }, function (err, user) {
-        if (err) return res.status(500).send('Error on the server.');
-        if (!user) return res.status(404).send('No user found.');
-        
+        if (err) return res.status(500).send('Error on the server.')
+        if (!user) return res.status(404).send('No user found.')
         // after we found data with email, we crypt password and check with user pw
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);		    
 
@@ -25,12 +24,13 @@ authController.loginAttempt = function(req, res, next){
 }
 //Check token when login reactjs
 authController.checkToken = function(req, res){
+    //console.log(req)
     var token = req.headers['x-access-token'];
     //res.send(token);
-		if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-		jwt.verify(token, config.secret, function(err, decoded) {
-			if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-			res.status(200).send(decoded); // if valid return decoded token, it contain id, expire time and ...
-		});
+    if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+    jwt.verify(token, config.secret, function(err, decoded) {
+        if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        res.status(200).send(decoded); // if valid return decoded token, it contain id, expire time and ...
+    });
 }
 module.exports = authController
