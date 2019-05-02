@@ -6,12 +6,12 @@ var CatProductSchema = new Schema({
     parent_id: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CatProduct'
-     },
+    },
     alias: { type: String },
     imageNumber: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Gallery'
-     },
+    },
     imagePath: { type: String },
     galleryNumber: [
         {

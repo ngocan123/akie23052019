@@ -33,7 +33,7 @@ catproductController.list = function(req, res, next) {
             })
         });
     }else{
-        CatProduct.populate('imageNumber').exec((err, post) => {
+        CatProduct.populate('imageNumber').populate('parent_id').exec((err, post) => {
             res.send(post)
         });
     }

@@ -23,6 +23,8 @@ menuController.list = function(req, res, next) {
         filter.$or = [{name: keyword}, {description:keyword}]
         //filter.page = page;
         Menu.find(filter)
+        .populate('parent_id')
+        .populate('imageNumber')
         .skip((perPage * page) - perPage)
         .limit(perPage).exec((err, posts) => {
             Menu.find(filter).countDocuments().exec(function(err, count) {
@@ -55,23 +57,45 @@ menuController.show = function(req, res) {
     Menu.findById(postId).exec(function (err, admins) {
       res.send(admins);
     });
-};
-//Add record
+}
+
 menuController.store = function(req, res) {
-    //res.send(req);
+    
     var datas = {
         "name": req.body.name,
         "description": req.body.description,
-    };
+        "imageNumber": req.body.imageNumber,
+        "imagePath": req.body.imagePath,
+        "parent_id": req.body.parent_id,
+    }
     var post = new Menu(datas);
         post.save(function(err, newPost){
-            res.send(newPost)
+            if(newPost.parent_id!=null){
+                res.send(newPost.parent_id);
+                Menu.findOne({'_id': newPost.parent_id}, function(err, result){
+                    if(result){
+                        var datas1 = result.children.push(newPost.parent_id)
+                        Menu.findByIdAndUpdate(result._id, { $set: datas1}, { new: true }, function (err, results) {
+                            res.send(results);
+                        });
+                    }else{
+                        res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
+                    }
+                });
+            }else{
+                res.send(newPost)
+            }
+            
         });
-};
+}
+
 menuController.update = (req, res) => {
     var data = {
         "name": req.body.name,
         "description": req.body.description,
+        "parent_id": req.body.parent_id,
+        "imageNumber": req.body.imageNumber,
+        "imagePath": req.body.imagePath,
     }
     Menu.findOne({'_id': req.params.id}, function(err, result){
         if(result){

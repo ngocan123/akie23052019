@@ -2,15 +2,24 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var MenuSchema = new Schema({
     name: { type: String },
-    parent_id: { type: String },
+    parent_id: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Menu'
+    },
     url: { type: String },
     path: { type: String },
     link: { type: String },
-    position: [
+    sort: { type: Number },
+    imageNumber: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Gallery',
+    },
+    imagePath: { type: String },
+    children: [
         {
-            data: {
+            id: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Positionmenu',
+                ref: 'Menu',
             },
             text: { type: String }
         }

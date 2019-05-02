@@ -89,7 +89,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // right here we need to allow domain
 const corsOptions = {
-	origin: [ 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:5000' ],
+	origin: [ 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:5000', 'http://demo.akie.vn', 'http://admin2.akie.vn' ],
 	credentials:true,
 }
 app.use(cors(corsOptions));
