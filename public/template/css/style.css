@@ -3493,12 +3493,12 @@ select.input-sm {
   line-height: 40px;
 }
 .header-opt-2 .header-content .block-search .btn-search {
-  background-color: #f78031;
+  background-color: #e02595;
   background-image: url(../images/icon/index5/search.png);
   width: 45px;
 }
 .header-opt-2 .header-content .block-search .btn-search:hover {
-  background-color: #ec6409;
+  background-color: #e02595;
 }
 .header-opt-2 .header-content .block-minicart {
   float: right;
@@ -24560,13 +24560,13 @@ img.alignright {
   background-color: #fff;
 }
 .index-opt-2 .back-to-top {
-  border-color: #f78031;
+  border-color: #e02595;
 }
 .index-opt-2 .back-to-top .fa {
-  background-color: #f78031;
+  background-color: #e02595;
 }
 .index-opt-2 .back-to-top:hover {
-  background-color: #f78031;
+  background-color: #e02595;
 }
 .slide-opt-3 .owl-item img {
   width: 100%;

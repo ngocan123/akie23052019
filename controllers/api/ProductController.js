@@ -3,13 +3,13 @@ const slugify = require('slugify')
 slugify.extend({'đ': 'd'})
 const Product = require("../../models/product")
 const Tag = require("../../models/tag")
+const Catproduct = require('../../models/catproduct')
 const url = require('url')
 const productController = {}
-productController.list = function(req, res, next) {
+productController.list = function(req, res, next){
     //res.send(req);
     const filter = {};
     const query = url.parse(req.url,true).query;
-
     //===================paginattion
     var perPage = query.perPage || 10
     var page = query.page || 1
@@ -45,7 +45,6 @@ productController.list = function(req, res, next) {
     }
 };
 productController.getAlls = function(req, res, next) {
-    //res.send('okok');
     Product.find({}).exec((err, post) => {
         res.send(post)
     });
@@ -100,8 +99,7 @@ productController.update = function(req, res) {
             res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
         }
     });
-};
-
+}
 productController.delete = (req, res) => {
     Product.remove({_id: req.params.id}, function(err) {
       res.json({ "message": "Xóa sản phẩm thành công!" })
@@ -109,22 +107,26 @@ productController.delete = (req, res) => {
 }
 productController.saveProductAndTag = (req, res, next) => {
     const request = req.body
-    const tags = request.tags.map(function(item, index){
-        return { label : item };  // this is loop and prepare tags array to save,
+    const datatags = request.tags.map(function(item, index){
+        return { label: item };  // this is loop and prepare tags array to save,
     });
-    Tag.insertMany(tags, {ordered:false}, function(err, savedtags){
+    Tag.insertMany(datatags, {ordered:false}, function(err, savedtags){
         if(err){
             if(err.code=="11000"){  // 11000 is duplicate error code
                 Tag.find({ "label": { "$in" : request.tags }}).then(function(data){
                     const post = new Product(request);
-                    post.tags = data.map(function(item, index){
+                    post.tags = data.map(function(item){
                         return item._id
                     })
-                    post.save((err, savedpost) => {
+                    post.save(async (err, savedpost) => {
                         if(err){
                             res.send(err);
                         }else{
-                            res.send({post: savedpost, tags:data});
+                            let category_id = await savedpost.category_id
+                            let data_category = await Catproduct.findOne({_id:category_id})
+                            data_category.arr_id_product[data_category.arr_id_product.length] = category_id
+                            let data_post_category = await Catproduct.findByIdAndUpdate(category_id, { $set: {arr_id_product:data_category.arr_id_product}}, { new: true })
+                            res.send({post: savedpost, tags: data, data_post_category: data_post_category})
                         }
                     })
                 })
@@ -136,15 +138,19 @@ productController.saveProductAndTag = (req, res, next) => {
             product.tags = savedtags.map(function(item, index){
                 return item._id
             })
-            product.save((err, savedpost) => {
+            product.save(async (err, savedpost) => {
                 if(err){
-                    res.send(err);
+                    res.send(err)
                 }else{
-                    res.send({post: savedpost, tags:savedtags});
+                    let category_id = await savedpost.category_id
+                    let data_category = await Catproduct.findOne({_id:category_id})
+                    data_category.arr_id_product[data_category.arr_id_product.length] = category_id
+                    let data_post_category = await Catproduct.findByIdAndUpdate(category_id, { $set: {arr_id_product:data_category.arr_id_product}}, { new: true })
+                    res.send({post: savedpost, tags: data, data_post_category: data_post_category})
                 }
             })
         }
-    })	
+    })
 }
 productController.getAlltags = function(req, res, next){
     Tag.aggregate([

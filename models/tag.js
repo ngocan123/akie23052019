@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var TagSchema = new Schema({
-    label: { type: String, required: true },
-    name: { type: String, required: true },
+let TagSchema = new Schema({
+    label: { type: String, unique: true},
+    name: { type: String},
     alias: { type: String },
     title_seo: { type: String },
     description_seo: { type: String },

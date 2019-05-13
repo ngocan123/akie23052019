@@ -1,14 +1,12 @@
 const express = require('express');
 const slugify = require('slugify');
 slugify.extend({'đ': 'd'})
-const Supplier = require("../../models/supplier");
+const StyleProduct = require("../../models/styleproduct");
 const url = require('url');
-const supplierController = {};
-supplierController.list = function(req, res, next) {
-    //res.send(req);
+const styleproductController = {}
+styleproductController.list = function(req, res, next) {
     const filter = {};
     const query = url.parse(req.url,true).query;
-    //===================paginattion
     var perPage = query.perPage || 10
     var page = query.page || 1
     //===================end pagination
@@ -22,10 +20,10 @@ supplierController.list = function(req, res, next) {
         // https://stackoverflow.com/questions/33898159/mongoose-where-query-with-or
         filter.$or = [{name: keyword}, {description:keyword}]
         //filter.page = page;
-        Supplier.find(filter)
+        StyleProduct.find(filter).populate('parent_id')
         .skip((perPage * page) - perPage)
         .limit(perPage).populate('imageNumber').exec((err, posts) => {
-            Supplier.find(filter).countDocuments().exec(function(err, count) {
+            StyleProduct.find(filter).countDocuments().exec(function(err, count) {
                 res.send({
                     posts: posts,
                     current: page,
@@ -35,31 +33,23 @@ supplierController.list = function(req, res, next) {
             })
         });
     }else{
-        Supplier.find({}).exec((err, post) => {
+        StyleProduct.populate('imageNumber').populate('parent_id').exec((err, post) => {
             res.send(post)
         });
     }
 };
-supplierController.getAll = function(req, res, next) {
-    const filter = {};
-    Supplier.aggregate([
+styleproductController.getAll = function(req, res, next) {
+    StyleProduct.aggregate([
         { "$project": {
             "value": "$_id",
             "label": "$name",
+            "alias": "$alias"
         }}
     ]).exec((err, post) => {
         res.send(post)
     })
-};
-supplierController.show = function(req, res) {
-    const postId = req.params.id;
-    Supplier.findById(postId).populate('author').populate('tags').populate('imageNumber').populate({path:'comments.author', select:'email'}).exec(function (err, admins) {
-      res.send(admins);
-    });
-};
-//Add record
-supplierController.store = function(req, res) {
-    //res.send(req);
+}
+styleproductController.store = (req, res) => {
     var datas = {
         "name": req.body.name,
         "alias": slugify(req.body.name,'-'),
@@ -68,15 +58,23 @@ supplierController.store = function(req, res) {
         "description": req.body.description,
         "parent_id": req.body.parent_id,
         "title_seo": req.body.title_seo,
-        "keyword_seo": req.body.keyword_seo,
         "description_seo": req.body.description_seo,
-    };
-    var post = new Supplier(datas);
+        "keyword_seo": req.body.keyword_seo,
+    }
+    //res.send({posts:datas});
+    var post = new StyleProduct(datas);
         post.save(function(err, newPost){
             res.send(newPost)
         });
 };
-supplierController.update = (req, res) => {
+styleproductController.show = function(req, res) {
+    const postId = req.params.id;
+    StyleProduct.findById(postId).populate('imageNumber').populate('parent_id').exec(function (err, admins) {
+      res.send(admins);
+    });
+}
+
+styleproductController.update = function(req, res) {
     var data = {
         name: req.body.name,
         description: req.body.description,
@@ -87,25 +85,25 @@ supplierController.update = (req, res) => {
         description_seo: req.body.description_seo,
         keyword_seo: req.body.keyword_seo,
     }
-    Supplier.findOne({'_id': req.params.id}, function(err, result){
+    StyleProduct.findOne({'_id': req.params.id}, function(err, result){
         if(result){
-            Supplier.findByIdAndUpdate(req.params.id, { $set: data}, { new: true }, function (err, results) {
+            StyleProduct.findByIdAndUpdate(req.params.id, { $set: data}, { new: true }, function (err, results) {
                 res.send(results);
             });
         }else{
             res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
         }
     });
-}
+};
 
-supplierController.delete = function(req, res) {
-    Supplier.remove({_id: req.params.id}, function(err) {
+styleproductController.delete = function(req, res) {
+    StyleProduct.remove({_id: req.params.id}, function(err) {
       res.json({ "message": "Xóa sản phẩm thành công!" })
     });
   };
-supplierController.remove = function(req, res){
+styleproductController.remove = function(req, res){
     const request = req.body;
-    Supplier.findByIdAndRemove(request._id, (err, post) => {
+    StyleProduct.findByIdAndRemove(request._id, (err, post) => {
         if(err){
             res.send(err);
         }else{
@@ -113,4 +111,4 @@ supplierController.remove = function(req, res){
         }
     });
 }
-module.exports = supplierController;
+module.exports = styleproductController;

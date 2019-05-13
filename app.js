@@ -37,6 +37,7 @@ var apiPermissionRouter = require('./routes/api/permission');
 var apiUserRouter = require('./routes/api/users');
 var apiProductRouter = require('./routes/api/product');
 var apiCatProductRouter = require('./routes/api/catproduct');
+var apiStyleProductRouter = require('./routes/api/styleproduct');
 var apiSupplierRouter = require('./routes/api/supplier');
 var apiTagRouter = require('./routes/api/tag');
 var apiSettingRouter = require('./routes/api/setting');
@@ -50,25 +51,14 @@ router.use(bodyParser.urlencoded({ extended: false })); // for json return
 router.use(bodyParser.json());  // for json return 
 
 //var uri = 'mongodb://shop2019:shop2019@cluster0-shard-00-00-uwpjt.mongodb.net:27017,cluster0-shard-00-01-uwpjt.mongodb.net:27017,cluster0-shard-00-02-uwpjt.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true';
-// let options = {
-//   useNewUrlParser: true,
-//   db: { native_parse: true },
-//   server: { poolSize: 5 },
-//   user: 'shop123',
-//   pass: '12345678'
-// }
-var uri = 'mongodb://shop123:12345678@163.44.206.217:27017/test';
-//var uri = 'mongodb://127.0.0.1:27017/test';
+
+var uri = 'mongodb://shop123:12345678@163.44.206.217:27017/test'
 // Connecting local mongodb database named test
-mongoose.connect(uri, { useNewUrlParser: true });
+mongoose.connect(uri, { useNewUrlParser: true })
+mongoose.set('useCreateIndex', true)
+const conn = mongoose.connection
 
-
-// var uri = 'mongodb://shop123:12345678@163.44.206.217:27017/test';
-// mongoose.Promise = global.Promise;
-// mongoose.connect(uri, {useNewUrlParser: true})
-// Connect to MongoDB:
-// mongoose.connect(uri,{ useNewUrlParser: true })
-//require('./config/passports');
+require('./config/passports')
 app.engine('hbs', hbs.express4({
   defaultLayout: 'views/layouts/layout',
   layoutsDir: __dirname + '/views/partials', 
@@ -144,6 +134,7 @@ app.use('/api/permission', apiPermissionRouter);
 app.use('/api/user', apiUserRouter);
 app.use('/api/product', apiProductRouter);
 app.use('/api/catproduct', apiCatProductRouter);
+app.use('/api/styleproduct', apiStyleProductRouter);
 app.use('/api/supplier', apiSupplierRouter);
 app.use('/api/tag', apiTagRouter);
 app.use('/api/setting', apiSettingRouter);

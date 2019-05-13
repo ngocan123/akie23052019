@@ -57,7 +57,23 @@ catproductController.store = (req, res) => {
     }
     var post = new CatProduct(datas);
         post.save(function(err, newPost){
-            res.send(newPost)
+            if(newPost.parent_id!=null){
+                var idCd = newPost._id;
+                CatProduct.findOne({'_id': newPost.parent_id}, function(err, result){
+                    if(result){
+                        var datas1 = {};
+                        datas1.childs = result.childs
+                        datas1.childs[result.childs.length] = idCd;
+                        CatProduct.findByIdAndUpdate(result._id, { $set: datas1}, { new: true }, function (err, results) {
+                            res.send(results);
+                        })
+                    }else{
+                        res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
+                    }
+                });
+            }else{
+                res.send(newPost)
+            }
         });
 };
 catproductController.show = function(req, res) {
@@ -87,7 +103,7 @@ catproductController.update = function(req, res) {
             res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
         }
     });
-};
+}
 
 catproductController.delete = function(req, res) {
     CatProduct.remove({_id: req.params.id}, function(err) {

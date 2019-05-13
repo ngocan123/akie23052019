@@ -1,22 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-let Product = require('./product');
-var CatProductSchema = new Schema({
+var StyleProductSchema = new Schema({
     name: { type: String },
     description: { type: String },
-    color: { type: String },
-    childs: { type: Array },
-    children: { type: Array },
-    styles: { type: Array },
-    arr_id_product:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product'
-        }
-    ],
     parent_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'CatProduct'
+        ref: 'StyleProduct'
     },
     alias: { type: String },
     imageNumber: { 
@@ -34,4 +23,4 @@ var CatProductSchema = new Schema({
     description_seo: { type: String },
     keyword_seo: { type: String },
 });
-module.exports = mongoose.model('CatProduct', CatProductSchema);
+module.exports = mongoose.model('StyleProduct', StyleProductSchema);

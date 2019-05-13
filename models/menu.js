@@ -2,10 +2,12 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var MenuSchema = new Schema({
     name: { type: String },
+    title: { type: String },
     parent_id: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Menu'
     },
+    parent: { type: Array },
     url: { type: String },
     path: { type: String },
     link: { type: String },
@@ -15,15 +17,22 @@ var MenuSchema = new Schema({
         ref: 'Gallery',
     },
     imagePath: { type: String },
-    children: [
+    childrens: [
         {
             id: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Menu',
             },
-            text: { type: String }
+            title: { type: String },
+            text: { type: String },
+            name: { type: String }
         }
     ],
+    childs: { type: Array },
+    children: { type: Array },
     description: { type: String }
 });
+MenuSchema.methods.getMenu = function(request){
+    return 'Model Menu'
+}
 module.exports = mongoose.model('Menu', MenuSchema);

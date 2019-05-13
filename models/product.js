@@ -10,6 +10,8 @@ var productSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CatProduct'
     },
+    left: { type: Number },
+    right: { type: Number },
     imagePath: { type: String },
     price: { type: Number },
     price_old: { type: Number },
@@ -34,8 +36,8 @@ var productSchema = new Schema({
     ],
     tags:[
             {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Tag'
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Tag'
             }
         ],
     title_seo: { type: String },
