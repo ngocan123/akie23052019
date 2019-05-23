@@ -2,6 +2,7 @@ const express = require('express');
 const slugify = require('slugify');
 slugify.extend({'đ': 'd'})
 const CatProduct = require("../../models/catproduct");
+const Alias = require("../../models/alias");
 const url = require('url');
 const catproductController = {}
 catproductController.list = function(req, res, next) {
@@ -39,43 +40,71 @@ catproductController.list = function(req, res, next) {
     }
 };
 catproductController.getAll = function(req, res, next) {
-    CatProduct.find({}).populate('parent_id').exec((err, post) => {
+    CatProduct.find({}).exec((err, post) => {
         res.send(post)
     });
 }
-catproductController.store = (req, res) => {
-    var datas = {
+catproductController.store = async (req, res) => {
+    var datas = await {
         "name": req.body.name,
         "alias": slugify(req.body.name,'-'),
+        "slug": slugify(req.body.name,'-'),
         "imagePath": req.body.imagePath,
         "imageNumber": req.body.imageNumber,
         "description": req.body.description,
         "parent_id": req.body.parent_id,
         "title_seo": req.body.title_seo,
         "description_seo": req.body.description_seo,
-        "keyword_seo": req.body.keyword_seo,
+        "keyword_seo": req.body.keyword_seo
     }
-    var post = new CatProduct(datas);
-        post.save(function(err, newPost){
-            if(newPost.parent_id!=null){
-                var idCd = newPost._id;
-                CatProduct.findOne({'_id': newPost.parent_id}, function(err, result){
-                    if(result){
-                        var datas1 = {};
-                        datas1.childs = result.childs
-                        datas1.childs[result.childs.length] = idCd;
-                        CatProduct.findByIdAndUpdate(result._id, { $set: datas1}, { new: true }, function (err, results) {
-                            res.send(results);
-                        })
-                    }else{
-                        res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
-                    }
-                });
-            }else{
-                res.send(newPost)
-            }
-        });
-};
+    var post = await new CatProduct(datas)
+    let datapost = await post.save()
+    if(datapost.parent_id!=null){
+        var paths = await postdataparentid(datapost,datapost._id)+'/'+datapost.alias
+        var dataposts = await CatProduct.findByIdAndUpdate(datapost._id, { $set: {slug:paths}}, { new: true })
+    }else{
+        var paths = await datapost.alias
+    }
+    if(datapost){
+        let data_alias = await {
+            "name": datapost.name,
+            "title": datapost.name,
+            "path": paths,
+            "alias": datapost.alias,
+            "slug": paths,
+            "name_table": "catproduct",
+            "id_table": datapost._id,
+        }
+        var postalias = await new Alias(data_alias)
+        var datapostalias = await postalias.save()
+    }
+    if(datapost.parent_id!=null){
+        var idCd = await datapost._id;
+        let dataitem = await CatProduct.findOne({'_id': datapost.parent_id})
+        if(dataitem){
+            var datas1 = {};
+            datas1.childs = await dataitem.childs
+            datas1.childs[dataitem.childs.length] = await idCd;
+            var datapost1 = await CatProduct.findByIdAndUpdate(dataitem._id, { $set: datas1}, { new: true })
+            //res.send(datapost1)
+        }else{
+            res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
+        }
+    }else{
+        //res.send(datapost)
+    }
+    res.send({paths:paths,datapostalias:datapostalias})
+}
+async function postdataparentid(data_category,id){
+    let ids = id
+    let data_categorys = await CatProduct.findById(data_category.parent_id)
+    if(data_categorys.parent_id!=null){
+        return await postdataparentid(data_categorys,'00')+'/'+data_categorys.alias
+    }else{
+        return await data_categorys.alias
+    }
+    
+}
 catproductController.show = function(req, res) {
     const postId = req.params.id;
     CatProduct.findById(postId).populate('imageNumber').populate('parent_id').exec(function (err, admins) {

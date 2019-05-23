@@ -4,6 +4,8 @@ slugify.extend({'đ': 'd'})
 const Product = require("../../models/product")
 const Tag = require("../../models/tag")
 const Catproduct = require('../../models/catproduct')
+const Styleproduct = require('../../models/styleproduct')
+const Alias = require('../../models/alias')
 const url = require('url')
 const productController = {}
 productController.list = function(req, res, next){
@@ -66,7 +68,7 @@ productController.show = function(req, res) {
     });
 };
 productController.create = function(req, res) {
-    res.send('View tạo tài khoản');
+    res.send({message:'View tạo tài khoản'});
 };
 //Add record
 productController.store = function(req, res) {
@@ -105,6 +107,7 @@ productController.delete = (req, res) => {
       res.json({ "message": "Xóa sản phẩm thành công!" })
     });
 }
+// Thêm sản phẩm
 productController.saveProductAndTag = (req, res, next) => {
     const request = req.body
     const datatags = request.tags.map(function(item, index){
@@ -114,43 +117,113 @@ productController.saveProductAndTag = (req, res, next) => {
         if(err){
             if(err.code=="11000"){  // 11000 is duplicate error code
                 Tag.find({ "label": { "$in" : request.tags }}).then(function(data){
-                    const post = new Product(request);
+                    const post = new Product(request)
                     post.tags = data.map(function(item){
                         return item._id
                     })
+                    post.arr_style_ids = request.styles_id
+                    post.alias = slugify(req.body.name,'-')
                     post.save(async (err, savedpost) => {
                         if(err){
-                            res.send(err);
+                            res.send(err)
                         }else{
+                            //Thêm loại sản phẩm
+                            let datastyle
+                            for(i=0; i < savedpost.arr_style_ids.length; i++){
+                                let itemStyle = await Styleproduct.findOne({_id: savedpost.arr_style_ids[i]})
+                                itemStyle.arr_product_ids[itemStyle.arr_product_ids.length] = await savedpost._id
+                                datastyle = await Styleproduct.findByIdAndUpdate(itemStyle._id, { $set: {arr_product_ids:itemStyle.arr_product_ids}}, { new: true })
+                            }
+                            //Thêm danh mục sản phẩm
                             let category_id = await savedpost.category_id
                             let data_category = await Catproduct.findOne({_id:category_id})
-                            data_category.arr_id_product[data_category.arr_id_product.length] = category_id
+                            data_category.arr_id_product[data_category.arr_id_product.length] = savedpost._id
                             let data_post_category = await Catproduct.findByIdAndUpdate(category_id, { $set: {arr_id_product:data_category.arr_id_product}}, { new: true })
-                            res.send({post: savedpost, tags: data, data_post_category: data_post_category})
+                            if(data_category.parent_id!=null){
+                                var paths = await postdataparentid(data_category,savedpost._id)+'/'+data_category.alias+'/'+savedpost.alias
+                            }
+                            let data_post_product = await Product.findByIdAndUpdate(savedpost._id, { $set: {slug:paths}}, { new: true })
+                            if(data_post_product){
+                                let data_alias = await {
+                                    "name": data_post_product.name,
+                                    "title": data_post_product.name,
+                                    "path": paths,
+                                    "alias": data_post_product.alias,
+                                    "slug": paths,
+                                    "name_table": "product",
+                                    "id_table": data_post_product._id,
+                                }
+                                var postalias = await new Alias(data_alias)
+                                var datapostalias = await postalias.save()
+                            }
+                            res.send(data_post_product)
+                            //res.send({post: savedpost})
                         }
                     })
                 })
             }else{
-                res.send(err);
+                res.send(err)
             }
         }else{
-            const product = new Product(request);
+            const product = new Product(request)
             product.tags = savedtags.map(function(item, index){
                 return item._id
             })
+            product.arr_style_ids = request.styles_id
             product.save(async (err, savedpost) => {
                 if(err){
                     res.send(err)
                 }else{
+                    //Thêm loại sản phẩm
+                    let datastyle
+                    for(i=0; i < savedpost.arr_style_ids.length; i++){
+                        let itemStyle = await Styleproduct.findOne({_id: savedpost.arr_style_ids[i]})
+                        //res.send(itemStyle);
+                        itemStyle.arr_product_ids[itemStyle.arr_product_ids.length] = await savedpost._id
+                        datastyle = await Styleproduct.findByIdAndUpdate(itemStyle._id, { $set: {arr_product_ids:itemStyle.arr_product_ids}}, { new: true })
+                    }
+                    //Thêm danh mục sản phẩm
                     let category_id = await savedpost.category_id
                     let data_category = await Catproduct.findOne({_id:category_id})
-                    data_category.arr_id_product[data_category.arr_id_product.length] = category_id
+                    data_category.arr_id_product[data_category.arr_id_product.length] = savedpost._id
+                    //res.send(data_category.arr_id_product)
                     let data_post_category = await Catproduct.findByIdAndUpdate(category_id, { $set: {arr_id_product:data_category.arr_id_product}}, { new: true })
-                    res.send({post: savedpost, tags: data, data_post_category: data_post_category})
+
+                    if(data_category.parent_id!=null){
+                        var paths = await postdataparentid(data_category,savedpost._id)+'/'+data_category.alias+'/'+savedpost.alias
+                    }
+                    let data_post_product = await Catproduct.findByIdAndUpdate(savedpost._id, { $set: {slug:paths}}, { new: true })
+                    if(data_post_product){
+                        let data_alias = await {
+                            "name": data_post_product.name,
+                            "title": data_post_product.name,
+                            "path": paths,
+                            "alias": data_post_product.alias,
+                            "slug": paths,
+                            "name_table": "product",
+                            "id_table": data_post_product._id,
+                        }
+                        var postalias = await new Alias(data_alias)
+                        var datapostalias = await postalias.save()
+                    }
+                    res.send(data_post_product)
+                    //res.send({post: savedpost, data_post_category: data_post_category, datastyle: datastyle})
                 }
             })
         }
     })
+}
+async function postdataparentid(data_category,id){
+    let ids = id
+    let category_id = await data_category.parent_id
+    let data_categorys = await Catproduct.findById(data_category.parent_id)
+    data_categorys.arr_id_product[data_categorys.arr_id_product.length] = ids
+    let data_category_update = await Catproduct.findByIdAndUpdate(category_id, { $set: {arr_id_product:data_category.arr_id_product}}, { new: true })
+    if(data_category_update.parent_id!=null){
+        return await postdataparentid(data_category_update,ids)+'/'+data_category_update.alias
+    }
+    return data_category_update.alias
+    
 }
 productController.getAlltags = function(req, res, next){
     Tag.aggregate([
@@ -158,35 +231,35 @@ productController.getAlltags = function(req, res, next){
             "value": "$_id",
             "label": "$label",
         }}
-    ], function (err, tags) {
+    ], function(err, tags) {
         if (err)
             res.send(err)
         else if (!tags)
             res.send(404)
         else
             res.send(tags)
-    });
+    })
 }
 productController.saveProductAndTagAsync = async function(req, res, next){
     const request = req.body
-    let returnres;
+    let returnres
     if(request._id){
-        const post = await Product.findById(request._id);
-        returnres = await post.savePostTags(request);		
+        const post = await Product.findById(request._id)
+        returnres = await post.savePostTags(request)
     }else{
-        const post = new Product();		
-        returnres = await post.savePostTags(request);
-    }		
-    res.send(returnres);
+        const post = new Product()
+        returnres = await post.savePostTags(request)
+    }
+    res.send(returnres)
 }
 productController.remove = function(req, res){
-    const request = req.body;
+    const request = req.body
     Product.findByIdAndRemove(request._id, (err, post) => {
         if(err){
-            res.send(err);
+            res.send(err)
         }else{
-            res.send({post: post, message:'deleted'});
+            res.send({post: post, message:'deleted'})
         }
-    });
+    })
 }
-module.exports = productController;
+module.exports = productController

@@ -29,6 +29,7 @@ var backendTagRouter = require('./routes/admin/tag');
 var backendGalleryRouter = require('./routes/admin/gallery');
 var backendAuthRouter = require('./routes/admin/auth');
 // Api
+var apialiasRouter = require('./routes/api/alias');
 var adminsRouter = require('./routes/api/admin');
 var apiRoleRouter = require('./routes/api/role');
 var apiMenuRouter = require('./routes/api/menu');
@@ -42,6 +43,8 @@ var apiSupplierRouter = require('./routes/api/supplier');
 var apiTagRouter = require('./routes/api/tag');
 var apiSettingRouter = require('./routes/api/setting');
 var apiGalleryRouter = require('./routes/api/gallery');
+var apiStylegalleryRouter = require('./routes/api/stylegallery');
+var apiPhotoRouter = require('./routes/api/photo');
 var apiAuthRouter = require('./routes/auth');
 
 var app = express();
@@ -93,29 +96,24 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(tools.onRequestStart);
-app.use(function(req, res, next){
-  const Setting = require('./models/setting');
-  Setting.findOne({lang:'vi'}).populate('favicon').populate('logo').exec(function(err, results){
-    res.locals.setting1 = results;
-  });
-  //res.send(res.locals.setting1);
-  //console.log(req.isAuthenticated('local.authLogin'));
-  res.locals.test = 'test bien global';
-  res.locals.jso = [
-    { name: 'abc' },
-    { name: 'bncd' }
-  ]
-  //res.locals.authLogin = req.isAuthenticated('local.authLogin');
-  // if(req.isAuthenticated()){
-  //   console.log(req.user);
-  //   res.locals.user = req.user;
-  // }
-  // if(!res.locals.authLogin){
-  //   res.redirect('/auth/login');
-  // }
-  next();
-});
-app.use('/', indexRouter);
+app.use(async function(req, res, next){
+  const Setting = await require('./models/setting')
+  const Menu = await require('./models/menu')
+  res.locals.setting1 = await Setting.findOne({lang:'vi'}).populate('favicon').populate('logo')
+  res.locals.menuTop = await Menu.find({keyname:"menu_top",parent_id: null})
+  if(res.locals.menuTop.length>0){
+    for(i=0; i<res.locals.menuTop.length; i++){
+      res.locals.menuTop[i].children = await Menu.find({parent_id:res.locals.menuTop[i]._id})
+      // if(res.locals.menuTop[i].children.length>0){
+      //   for(j=0; j<res.locals.menuTop[i].children.length; j++){
+      //     res.locals.menuTop[i].children[j].children = await Menu.find({parent_id:res.locals.menuTop[i].children[j]._id})
+      //   }
+      // }
+    }
+  }
+  next()
+})
+
 app.use('/users', usersRouter);
 app.use('/backend', backendDashboardRouter);
 app.use('/backend/admin/', backendAdminRouter);
@@ -125,7 +123,8 @@ app.use('/backend/catproduct', backendCatProductRouter);
 app.use('/backend/tag', backendTagRouter);
 app.use('/backend/gallery', backendGalleryRouter);
 app.use('/backend/auth', backendAuthRouter);
-
+//apialiasRouter
+app.use('/api/alias', apialiasRouter);
 app.use('/api/admin', adminsRouter);
 app.use('/api/role', apiRoleRouter);
 app.use('/api/menu', apiMenuRouter);
@@ -139,7 +138,10 @@ app.use('/api/supplier', apiSupplierRouter);
 app.use('/api/tag', apiTagRouter);
 app.use('/api/setting', apiSettingRouter);
 app.use('/api/gallery', apiGalleryRouter);
+app.use('/api/stylegallery', apiStylegalleryRouter);
+app.use('/api/photo', apiPhotoRouter);
 app.use('/api/auth', apiAuthRouter);
+app.use('/', indexRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

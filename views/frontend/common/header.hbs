@@ -57,7 +57,7 @@
             <ul class="nav-right">
                 
                 <li class="dropdown setting">
-                    <a data-toggle="dropdown" role="button" href="#" class="dropdown-toggle "><span>My Account</span> <i aria-hidden="true" class="fa fa-angle-down"></i></a>
+                    <a data-toggle="dropdown" role="button" href="#" class="dropdown-toggle "><span>Tài khoản</span> <i aria-hidden="true" class="fa fa-angle-down"></i></a>
                     <div class="dropdown-menu  ">
                         <div class="switcher  switcher-language">
                             <strong class="title">Select language</strong>
@@ -583,62 +583,23 @@
                             <li>
                             {{/if}}
                             <a href="Contact.html" title="{{this.name}}">{{this.name}} </a>
-                            {{# if this.childs }}
+                            {{# if this.children }}
                             <span class="toggle-submenu"></span>
                             <div class="megamenu drop-menu">
                                 <ul>
-                                    <li class="col-md-3">
-                                        
-                                        <strong class="title"><a href=""><span>Women's </span></a></strong>
-                                        <ul class="list-submenu">
-                                            <li><a href="">Shoes</a></li>
-                                            <li><a href="">Clothing</a></li>
-                                            <li><a href="">Accessories</a></li>
-                                            <li><a href="">Sunglasses</a></li>
-                                        </ul>
-
-                                        <strong class="title"><a href=""><span>Women's </span></a></strong>
-                                        <ul class="list-submenu">
-                                            <li><a href="">Shoes</a></li>
-                                            <li><a href="">Clothing</a></li>
-                                            <li><a href="">Accessories</a></li>
-                                            <li><a href="">Sunglasses</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="col-md-3">
-                                        <strong class="title"><a href=""><span>Women's </span></a></strong>
-                                        <ul class="list-submenu">
-                                            <li><a href="">Shoes</a></li>
-                                            <li><a href="">Clothing</a></li>
-                                            <li><a href="">Accessories</a></li>
-                                            <li><a href="">Sunglasses</a></li>
-                                        </ul>
-
-                                        <strong class="title"><a href=""><span>Women's </span></a></strong>
-                                        <ul class="list-submenu">
-                                            <li><a href="">Shoes</a></li>
-                                            <li><a href="">Clothing</a></li>
-                                            <li><a href="">Accessories</a></li>
-                                            <li><a href="">Sunglasses</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="col-md-3">
-                                        
-                                        <strong class="title"><a href=""> <span>Kid's</span></a></strong>
-                                        <ul class="list-submenu">
-                                            <li><a href="">Shoes</a></li>
-                                            <li><a href="">Clothing</a></li>
-                                            <li><a href="">Accessories</a></li>
-                                            <li><a href="">Sunglasses</a></li>
-                                        </ul>
-
-                                        <strong class="title"><a href=""><span>Women's </span></a></strong>
-                                        <ul class="list-submenu">
-                                            <li><a href="">Shoes</a></li>
-                                            <li><a href="">Clothing</a></li>
-                                            <li><a href="">Accessories</a></li>
-                                            <li><a href="">Sunglasses</a></li>
-                                        </ul>
+                                    <li class="col-md-9">
+                                        {{#each this.children }}
+                                        <div class="col-md-4">
+                                            <strong class="title"><a href=""><span>{{this.name}} </span></a></strong>
+                                            {{#if this.children }}
+                                            <ul class="list-submenu">
+                                                {{#each this.children}}
+                                                <li><a href="" title="{{this.name}}">{{this.name}}</a></li>
+                                                {{/each}}
+                                            </ul>
+                                            {{/if}}
+                                        </div>
+                                        {{/each}}
                                     </li>
                                     <li class="col-md-3">
                                         <div class="img-categori">

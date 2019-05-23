@@ -674,7 +674,7 @@ select.form-control {
   appearance: none;
   background-position: center right 11px;
   background-repeat: no-repeat;
-  background-image: url(../images/icon/arrow-select.png);
+  background-image: url(../images/icon/select.png);
   padding-right: 22px;
 }
 .input-group-addon {
@@ -2661,6 +2661,7 @@ select.input-sm {
   .sticky-wrapper.is-sticky .mid-header .block-nav-categori .block-title {
     background-position: center;
     padding: 0;
+    line-height: 25px;
   }
   .sticky-wrapper.is-sticky .mid-header .block-nav-categori .block-title span {
     visibility: hidden;
@@ -17110,8 +17111,18 @@ select.input-sm {
   padding: 8px 0 0px;
 }
 .toolbar-products.toolbar-top {
-  margin-top: 40px;
-  margin-bottom: 45px;
+  border-bottom: 1px solid #eeeeee;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+h1.cate-title {
+  margin: 0;
+  margin-bottom: -1px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0 12px;
+  line-height: 32px;
+  border-bottom: 3px solid #ff3366;
 }
 .toolbar-products.toolbar-bottom {
   margin-top: 20px;
@@ -17256,6 +17267,7 @@ select.input-sm {
 }
 .category-view {
   margin-top: 25px;
+  margin-bottom: 25px;
 }
 .category-view .category-image {
   display: block;
@@ -22965,6 +22977,9 @@ img.alignright {
   content: "\f105";
 }
 .block-deals-of-opt2 .product-item {
+  border: 1px solid #eeeeee;
+}
+.boxlistproduct .product-item{
   border: 1px solid #eeeeee;
 }
 .block-deals-of-opt2 .product-item:hover {

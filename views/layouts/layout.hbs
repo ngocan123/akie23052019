@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{{settings.name}}</title>
+    <title>{{title}}</title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <base href="http://{{urlRoot}}">
     <!-- Style CSS -->
     <link rel="stylesheet" type="text/css" href="template/css/style.css">
 </head>
-<body class="cms-index-index index-opt-2">
+<body class="cms-index-index {{classBody}}">
 
     <div class="wrapper">
         {{> frontend/common/header }}
@@ -38,6 +38,8 @@
     <script type="text/javascript" src="template/js/jquery.bxslider.min.js"></script>
     <!-- actual --> 
     <script type="text/javascript" src="template/js/jquery.actual.min.js"></script>
+    <!-- jQuery UI -->
+    <script type="text/javascript" src="template/js/jquery-ui.min.js"></script>
     <!-- Chosen jquery-->    
     <script type="text/javascript" src="template/js/chosen.jquery.min.js"></script>
     <!-- parallax jquery--> 

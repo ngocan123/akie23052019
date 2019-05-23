@@ -37,7 +37,7 @@ menuController.list = function(req, res, next) {
                     count:count,
                 })
             })
-        });
+        })
     }else{
         Menu.find({}).exec((err, post) => {
             res.send(post)
@@ -186,7 +186,9 @@ menuController.store = function(req, res) {
         "description": req.body.description,
         "imageNumber": req.body.imageNumber,
         "imagePath": req.body.imagePath,
+        "position_id": req.body.position_id,
         "parent_id": req.body.parent_id,
+        "keyname": req.body.keyname,
     }
     var post = new Menu(datas);
         post.save(function(err, newPost){
@@ -215,6 +217,8 @@ menuController.update = (req, res) => {
         "name": req.body.name,
         "description": req.body.description,
         "parent_id": req.body.parent_id,
+        "position_id": req.body.position_id,
+        "keyname": req.body.keyname,
         "imageNumber": req.body.imageNumber,
         "imagePath": req.body.imagePath,
     }

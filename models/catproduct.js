@@ -8,17 +8,13 @@ var CatProductSchema = new Schema({
     childs: { type: Array },
     children: { type: Array },
     styles: { type: Array },
-    arr_id_product:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product'
-        }
-    ],
+    arr_id_product:{ type: Array },
     parent_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CatProduct'
     },
     alias: { type: String },
+    slug: { type: String },
     imageNumber: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Gallery'

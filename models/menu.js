@@ -7,6 +7,8 @@ var MenuSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Menu'
     },
+    position_id: { type: String },
+    keyname: { type: String },
     parent: { type: Array },
     url: { type: String },
     path: { type: String },

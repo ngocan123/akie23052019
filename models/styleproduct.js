@@ -1,12 +1,15 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var Product = require('./product')
 var StyleProductSchema = new Schema({
     name: { type: String },
     description: { type: String },
+    arr_product_ids:{ type: Array },
     parent_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'StyleProduct'
     },
+    listproductstyle: { type: Array },
     alias: { type: String },
     imageNumber: { 
         type: mongoose.Schema.Types.ObjectId,

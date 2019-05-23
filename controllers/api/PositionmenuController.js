@@ -62,6 +62,7 @@ positionmenuController.store = function(req, res) {
     var datas = {
         "name": req.body.name,
         "description": req.body.description,
+        "keyname": req.body.keyname,
     };
     var post = new Positionmenu(datas);
         post.save(function(err, newPost){
@@ -72,6 +73,7 @@ positionmenuController.update = (req, res) => {
     var data = {
         "name": req.body.name,
         "description": req.body.description,
+        "keyname": req.body.keyname,
     }
     Positionmenu.findOne({'_id': req.params.id}, function(err, result){
         if(result){

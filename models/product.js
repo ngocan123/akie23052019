@@ -2,14 +2,22 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const Tag = require('./tag');
 const Gallery = require('./gallery');
+const Styleproduct = require('./styleproduct');
 //var User = require('./user');
 var productSchema = new Schema({
     name: { type: String },
     alias: { type: String },
+    slug: { type: String },
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CatProduct'
     },
+    arr_style_ids: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Styleproduct'
+        }
+    ],
     left: { type: Number },
     right: { type: Number },
     imagePath: { type: String },
