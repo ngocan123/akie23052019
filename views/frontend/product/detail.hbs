@@ -85,29 +85,29 @@
                                    
                                     <div class="product-info-price">
                                         <div class="price-box">
-                                            <span class="price">$38.95   </span>
-                                            <span class="old-price">$52.00</span>
-                                            <span class="label-sale">-30%</span>
+                                            <span class="price">{{itemproduct.price}} VNĐ   </span>
+                                            <span class="old-price">{{itemproduct.price_old}} VNĐ</span>
+                                            {{!-- <span class="label-sale">-30%</span> --}}
                                         </div>
                                     </div>  
                                     <div class="product-code">
-                                        Mã sản phẩm: 453217907
+                                        Mã sản phẩm: {{itemproduct.code}}
                                     </div> 
                                     <div class="product-info-stock">
                                         <div class="stock available">
-                                            <span class="label">Availability: </span>In stock
+                                            <span class="label">Tình trạng: </span>Còn hàng
                                         </div>
                                     </div>
                                     <div class="product-condition">
-                                        Condition: New
+                                        Trạng thái: Mới
                                     </div>
                                     <div class="product-overview">
                                         <div class="overview-content">
-                                            Vestibulum eu odio. Suspendisse potenti. Morbi mollis tellus ac sapien. Praesent egestas tristique nibh. Nullam dictum felis eu pede mollis pretium. Fusce egestas elit eget lorem. 
+                                            {{{itemproduct.description}}}
                                         </div>
                                     </div>
 
-                                    <div class="product-add-form">
+                                    {{!-- <div class="product-add-form">
                                         <p>Thuộc tính sản phẩm:</p>
                                         <form>
 
@@ -147,8 +147,6 @@
                                                 </div>
                                             </div>
 
-                                            
-
                                             <div class="product-options-bottom clearfix">
                                                 
                                                 <div class="actions">
@@ -170,14 +168,14 @@
                                             </div>
 
                                         </form>
-                                    </div>
+                                    </div> --}}
                                     <div class="product-addto-links-second">
                                         <a href="" class="action action-print">In</a>
                                         <a href="" class="action action-friend">Chia sẻ</a>
                                     </div>
-                                    <div class="share">
+                                    {{!-- <div class="share">
                                         <img src="/template/images/media/index1/share.png" alt="share">
-                                    </div>
+                                    </div> --}}
                                 </div><!-- detail- product -->
 
                             </div><!-- Main detail -->

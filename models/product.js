@@ -8,6 +8,7 @@ var productSchema = new Schema({
     name: { type: String },
     alias: { type: String },
     slug: { type: String },
+    code: '',
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CatProduct'
@@ -24,6 +25,7 @@ var productSchema = new Schema({
     price: { type: Number },
     price_old: { type: Number },
     description: { type: String },
+    detail: { type: String },
     detail: { type: String },
     imageNumber: { 
         type: mongoose.Schema.Types.ObjectId,

@@ -25,6 +25,7 @@
     "formidable": "^1.2.1",
     "fs": "0.0.1-security",
     "fs-extra": "^7.0.1",
+    "handlebars-intl": "^1.1.2",
     "hbs": "^4.0.4",
     "http": "0.0.0",
     "http-errors": "~1.6.2",
