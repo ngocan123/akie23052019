@@ -21,12 +21,13 @@ var productSchema = new Schema({
     ],
     left: { type: Number },
     right: { type: Number },
+    imageArray: { type: Array },
     imagePath: { type: String },
     price: { type: Number },
     price_old: { type: Number },
     description: { type: String },
     detail: { type: String },
-    detail: { type: String },
+    
     imageNumber: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Gallery'

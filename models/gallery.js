@@ -9,4 +9,4 @@ var GallerySchema = new Schema({
     filename: { type: String },
     destination: { type: String },
 });
-module.exports = mongoose.model('Gallery', GallerySchema);
+module.exports = mongoose.model('Gallery', GallerySchema)
