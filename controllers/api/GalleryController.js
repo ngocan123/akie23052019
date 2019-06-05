@@ -2,16 +2,24 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const Gallery = require("../../models/gallery");
+const url = require('url')
 //========Fix upload image
 var multer = require('multer');
 var cors = require('cors');
 app.use(cors());
 const galleryController = {};
+//Danh sách image theo id
+galleryController.listDataWithId = async (req, res) => {
+  const query = await url.parse(req.url,true).query;
+  //res.send(query)
+  const data = await Gallery.find({_id: {$in: query.dataId.split(',')} })
+  res.send(data)
+}
 //Add record
 galleryController.getAll = (req, res) => {
   Gallery.find().exec((err, post) => {
       res.send(post)
-  });
+  })
 }
 
 galleryController.show = function(req, res) {
@@ -46,7 +54,7 @@ galleryController.store = (req, res) => {
     }
     datas = {
       "title": '',
-      "path": req.file.path.replace('public', ''),
+      "path": '/uploads/'+req.file.filename,
       "size": req.file.size,
       "filename": req.file.filename,
       "destination": req.file.destination,
@@ -68,26 +76,26 @@ galleryController.update = function(req, res) {
     Gallery.findOne({'_id': req.params.id}, function(err, result){
         if(result){
           Gallery.findByIdAndUpdate(req.params.id, { $set: data}, { new: true }, function (err, results) {
-                res.send(results);
-            });
+                res.send(results)
+            })
         }else{
-            res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"});
+            res.json({"message": "Lỗi chưa thể cập nhật sản phẩm"})
         }
-    });
-};
+    })
+}
 
 galleryController.delete = function(req, res) {
   Gallery.remove({_id: req.params.id}, function(err) {
     res.json({ "message": "Xóa ảnh thành công!" })
-  });
-};
+  })
+}
 galleryController.remove = function(req, res){
-  const request = req.body;
+  const request = req.body
   Gallery.findByIdAndRemove(request._id, (err, post) => {
       if(err){
-          res.send(err);
+          res.send(err)
       }else{
-          res.send({post: post, message:'deleted'});
+          res.send({post: post, message:'deleted'})
       }
   });
 }

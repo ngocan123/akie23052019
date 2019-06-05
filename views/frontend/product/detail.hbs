@@ -24,7 +24,7 @@
 
                                     <div class="image_preview_container images-large">
 
-                                        <img id="img_zoom" data-zoom-image="/template/images/media/detail/thumb-lag1.jpg" src="/template/images/media/detail/thumb-img1.jpg" alt="">
+                                        <img id="img_zoom" data-zoom-image="{{gallerys.0.path}}" src="{{gallerys.0.path}}" alt="{{itemproduct.name}}">
 
                                         <button class="btn-zoom open_qv"><span>zoom</span></button>
 
@@ -33,29 +33,13 @@
                                     <div class="product_preview images-small">
 
                                         <div class="owl-carousel thumbnails_carousel" id="thumbnails"  data-nav="true" data-dots="false" data-margin="10" data-responsive='{"0":{"items":3},"480":{"items":4},"600":{"items":5},"768":{"items":3}}'>
-                                            
-                                            <a href="#" data-image="/template/images/media/detail/thumb-img1.jpg" data-zoom-image="/template/images/media/detail/thumb-lag1.jpg">
+                                            {{#each gallerys}}
+                                            <a href="#" data-image="{{this.path}}" data-zoom-image="{{this.path}}" title="{{itemproduct.name}}">
 
-                                                <img src="/template/images/media/detail/thumb1.jpg" data-large-image="/template/images/media/detail/thumb-img1.jpg" alt="">
-
-                                            </a>
-
-                                            <a href="#" data-image="/template/images/media/detail/thumb-img2.jpg" data-zoom-image="/template/images/media/detail/thumb-lag2.jpg">
-
-                                                <img src="/template/images/media/detail/thumb2.jpg" data-large-image="/template/images/media/detail/thumb-img2.jpg" alt="">
+                                                <img src="{{this.path}}" data-large-image="{{this.path}}" alt="{{itemproduct.name}}">
 
                                             </a>
-                                            <a href="#" data-image="/template/images/media/detail/thumb-img3.jpg" data-zoom-image="/template/images/media/detail/thumb-lag3.jpg">
-
-                                                <img src="/template/images/media/detail/thumb3.jpg" data-large-image="/template/images/media/detail/thumb-img3.jpg" alt="">
-
-                                            </a>
-                                            <a href="#" data-image="/template/images/media/detail/thumb-img1.jpg" data-zoom-image="/template/images/media/detail/thumb-lag1.jpg">
-
-                                                <img src="/template/images/media/detail/thumb1.jpg" data-large-image="/template/images/media/detail/thumb-img1.jpg" alt="">
-
-                                            </a>
-
+                                            {{/each}}
                                         </div><!--/ .owl-carousel-->
 
                                     </div><!--/ .product_preview-->
@@ -189,64 +173,15 @@
                             <!-- Nav tabs -->
                             <ul class="nav nav-pills" role="tablist">
                                 <li role="presentation" class="active"><a href="#description" role="tab" data-toggle="tab">Chi tiết sản phẩm</a></li>
-                                <li role="presentation"><a href="#tags" role="tab" data-toggle="tab">Thông tin sản phẩm</a></li>
-                                <li role="presentation"><a href="#reviews" role="tab" data-toggle="tab">reviews</a></li>
-                                <li role="presentation"><a href="#additional" role="tab" data-toggle="tab">Extra Tabs</a></li>
-                                <li role="presentation"><a href="#tab-cust" role="tab" data-toggle="tab">Guarantees</a></li>
+                                
                             </ul>
 
                             <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="description">
-                                    <div class="block-title">Product Details</div>
+                                    <div class="block-title">Chi tiết sản phẩm</div>
                                     <div class="block-content">
-                                        <p>Morbi mollis tellus ac sapien. Nunc nec neque. Praesent nec nisl a purus blandit viverra. Nunc nec neque. Pellentesque auctor neque nec urna.</p>
-                                        <br>
-                                        <p>Curabitur suscipit suscipit tellus. Cras id dui. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Maecenas vestibulum mollis diam.</p>
-                                        <br>
-                                        <p>Vestibulum facilisis, purus nec pulvinar iaculis, ligula mi congue nunc, vitae euismod ligula urna in dolor. Sed lectus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Nam at tortor in tellus interdum sagittis. Pellentesque egestas, neque sit amet convallis pulvinar, justo nulla eleifend augue, ac auctor orci leo non est.</p>
-                                        <br>
-                                        <p>Morbi mollis tellus ac sapien. Nunc nec neque. Praesent nec nisl a purus blandit viverra. Nunc nec neque. Pellentesque auctor neque nec urna.</p>
-                                   
-                                    </div>
-                                </div>
-                                <div role="tabpanel" class="tab-pane" id="tags">
-                                    <div class="block-title">information</div>
-                                    <div class="block-content">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                       
-                                    
-                                    </div>
-                                </div>
-                                <div role="tabpanel" class="tab-pane" id="reviews">
-                                    <div class="block-title">reviews</div>
-                                    <div class="block-content">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                       
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                    </div>
-                                </div>
-                                <div role="tabpanel" class="tab-pane" id="additional">
-                                    <div class="block-title">Extra Tabs</div>
-                                    <div class="block-content">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                       
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                    </div>
-                                </div>
-                                <div role="tabpanel" class="tab-pane" id="tab-cust">
-                                    <div class="block-title">Guarantees</div>
-                                    <div class="block-content">
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                        
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also Aldus PageMaker including versions of Lorem Ipsum</p>
-                                   
+                                        {{{itemproduct.detail}}}
                                     </div>
                                 </div>
                             </div>

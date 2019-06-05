@@ -186,7 +186,7 @@ productController.saveProductAndTag = (req, res, next) => {
                     let category_id = await savedpost.category_id
                     let data_category = await Catproduct.findOne({_id:category_id})
                     data_category.arr_id_product[data_category.arr_id_product.length] = savedpost._id
-                    //res.send(data_category.arr_id_product)
+
                     let data_post_category = await Catproduct.findByIdAndUpdate(category_id, { $set: {arr_id_product:data_category.arr_id_product}}, { new: true })
 
                     if(data_category.parent_id!=null){
@@ -207,7 +207,7 @@ productController.saveProductAndTag = (req, res, next) => {
                         var datapostalias = await postalias.save()
                     }
                     res.send(data_post_product)
-                    //res.send({post: savedpost, data_post_category: data_post_category, datastyle: datastyle})
+                    
                 }
             })
         }

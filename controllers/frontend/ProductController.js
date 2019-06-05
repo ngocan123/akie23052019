@@ -8,16 +8,21 @@ var Setting = require('../../models/setting')
 var Menu = require('../../models/menu')
 var Photo = require('../../models/photo')
 var Alias = require("../../models/alias")
+var Gallery = require("../../models/gallery")
 var productController = {}
 var router = express.Router()
 const url = require('url')
 //router.use(csrfProtection);
 productController.detail = async function(req,res,next) {
+    //res.send({test:req.get('host')})
     var query = await url.parse(req.url,true)
     var data_alias = await Alias.findOne({path:query.path.slice(1)})
+    
     if(data_alias){
         if(data_alias.name_table=="product"){
             let itemproduct = await Product.findOne({_id: data_alias.id_table})
+            var gallerys = await Gallery.find({_id: {$in: itemproduct.imageArray}})
+            //res.send(gallerys)
             //res.send(itemproduct)
             let datacat = await Catproduct.find({})
             let itemcatproduct = await Catproduct.findOne({_id: itemproduct.category_id})
@@ -60,6 +65,7 @@ productController.detail = async function(req,res,next) {
                 htmlBreakcrum: htmlBreakcrum,
                 datamenuBottom: datamenuBottom,
                 itemproduct:itemproduct,
+                gallerys:gallerys,
                 itemcatproduct:itemcatproduct,
               })
         }else{
