@@ -19,6 +19,7 @@ var productSchema = new Schema({
             ref: 'Styleproduct'
         }
     ],
+    supplier_id: { type: String },
     left: { type: Number },
     right: { type: Number },
     imageArray: { type: Array },
@@ -71,7 +72,7 @@ productSchema.methods.savePostTags = async function(request){
             return err;
         }
     }
-
+    
     // second save post
     let savedpost
     try{

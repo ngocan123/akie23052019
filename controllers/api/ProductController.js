@@ -5,6 +5,7 @@ const Product = require("../../models/product")
 const Tag = require("../../models/tag")
 const Catproduct = require('../../models/catproduct')
 const Styleproduct = require('../../models/styleproduct')
+const Supplierproduct = require('../../models/supplier')
 const Alias = require('../../models/alias')
 const url = require('url')
 const productController = {}
@@ -59,16 +60,18 @@ productController.getAll = function(req, res, next) {
     }
     Product.find(filter).populate('author').populate('tags').exec((err, post) => {
         res.send(post)
-    });
-};
-productController.show = function(req, res) {
-    const postId = req.params.id;
-    Product.findById(postId).populate('category_id').populate('author').populate('tags').populate('imageNumber').populate({path:'comments.author', select:'email'}).exec(function (err, admins) {
-      res.send(admins);
-    });
-};
+    })
+}
+productController.show =async function(req, res) {
+    
+    const postId = await req.params.id;
+    const data = await Product.findById(postId).populate('category_id').populate('author').populate('tags').populate('imageNumber').populate({path:'comments.author', select:'email'})
+    const listStyle = await Styleproduct.find({_id: {$in: data.arr_style_ids}})
+    const itemSupplier = await Supplierproduct.findOne({_id: data.supplier_id})
+    res.send({data:data,listStyle:listStyle,itemSupplier:itemSupplier})
+}
 productController.create = function(req, res) {
-    res.send({message:'View tạo tài khoản'});
+    res.send({message:'View tạo tài khoản'})
 };
 //Add record
 productController.store = function(req, res) {
@@ -112,7 +115,8 @@ productController.saveProductAndTag = (req, res, next) => {
     const request = req.body
     const datatags = request.tags.map(function(item, index){
         return { label: item };  // this is loop and prepare tags array to save,
-    });
+    })
+    //res.send(datatags)
     Tag.insertMany(datatags, {ordered:false}, function(err, savedtags){
         if(err){
             if(err.code=="11000"){  // 11000 is duplicate error code
@@ -157,7 +161,6 @@ productController.saveProductAndTag = (req, res, next) => {
                                 var datapostalias = await postalias.save()
                             }
                             res.send(data_post_product)
-                            //res.send({post: savedpost})
                         }
                     })
                 })
@@ -207,7 +210,7 @@ productController.saveProductAndTag = (req, res, next) => {
                         var datapostalias = await postalias.save()
                     }
                     res.send(data_post_product)
-                    
+
                 }
             })
         }
@@ -241,10 +244,26 @@ productController.getAlltags = function(req, res, next){
     })
 }
 productController.saveProductAndTagAsync = async function(req, res, next){
+    var request = req.body
+    var datatags = await request.tags.map(function(item){
+        return { label: item }
+    })
+    var savedtags = await Tag.insertMany(datatags, {ordered:false})
+    res.send({savedtags:savedtags})
+    
+}
+productController.saveProductAndTagAsyncs = async function(req, res, next){
     const request = req.body
     let returnres
     if(request._id){
         const post = await Product.findById(request._id)
+        //Thêm loại sản phẩm
+        let datastyle
+        for(i=0; i < savedpost.arr_style_ids.length; i++){
+            let itemStyle = await Styleproduct.findOne({_id: savedpost.arr_style_ids[i]})
+            itemStyle.arr_product_ids[itemStyle.arr_product_ids.length] = await savedpost._id
+            datastyle = await Styleproduct.findByIdAndUpdate(itemStyle._id, { $set: {arr_product_ids:itemStyle.arr_product_ids}}, { new: true })
+        }
         returnres = await post.savePostTags(request)
     }else{
         const post = new Product()
